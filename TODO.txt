@@ -1,0 +1,106 @@
+Cosas por hacer:
+_______________________________________________________________________________
+Basico:
+
+    Escenario:
+        Por dimensiones.
+        Heightmaps:
+            Mayas.
+            Shaders.
+            Normals.
+            Colisionable.
+        Colisionable.
+        
+    Manejador de Graficos (Estatico):
+        Clase estatica y constante.
+        
+    Niveles:
+        Cargador XML
+        Switcher:
+            Intento de Vida.
+            Nivel superado.
+            Victoria.
+            Derrota.
+
+    Motos:
+        Direccion Basica.
+        Aceleracion (Vel maxima)
+        Turbo (Posibilidad y cantidad).
+        Vida (Cantidad).
+        Shader Basico (Dos Luces)
+        Colisionable. 
+        Estela de luz:
+            Shader Basico.
+            Colisionable.
+
+    IA Basica:
+        Patruya.
+
+    Controles:
+        Acelerar.
+        Voltear.
+        Cambiar Camara.
+        Pausar.
+        
+    GUI:
+        Vidas.
+        Vida.
+        Turbo.
+        Camara Actual.
+        Direccion de salida.
+    
+    Camara:
+        Vista 1ra Persona.
+        Vista 3ra Persona.
+        Vista Panoramica.
+        3 Vistas.
+_______________________________________________________________________________
+Avanzado:
+    Manejador de Graficos (Runtime):
+        Carga de efectos por XML.
+        Pantalla Completa.
+        Cambio de resolucion.
+
+    Cargador de OBJ:
+        Model3D Class.
+            Mesh Class.
+            Buscar Mesh por Nombre.
+    
+    Shaders para Moto:
+        Textura.
+        Normales.
+        Neon (Coloreable).
+        Efecto de llantas.
+        Arreglo de Luces.
+    
+    Escenario:
+        SkyMap Basico.
+        Escenario 3D Cercano.
+            Shader Garaud con arreglo de luces.
+        Sistema de luces de Fireworks.
+    
+    Reflexion Basica:
+        Cargar CubeMap.
+        Actualizar Shader de Moto y de Piso.
+    
+    Shaders de Bloom:
+        Manipular pixel Buffer.
+        Shader de Postprocesado Bloom.
+    
+    Shaders de Estela con distorcion:
+        Manipular pixel Buffer.
+        Aplicar solo a estelas cercanas.
+    
+    Sistemas de Particulas:
+        Particulas de Fireworks:
+            Texturas de Particulas.
+        Particulas de eliminacion.
+            Cargar arreglo de vertices.
+            Usar Threads.
+    
+    Shader de Luces conicas:
+        Activar arreglo de luces conicas.
+        Actualizar Shader de Piso.
+    
+    
+    

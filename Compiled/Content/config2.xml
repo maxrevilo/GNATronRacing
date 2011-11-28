@@ -1,0 +1,124 @@
+<?xml version="1.0" ?>
+<proyecto>
+    <niveles cantidad="2">
+        <nivel id="1" tiempo_juego="360" ancho="100" alto="5" profundo="100">  
+
+          <jugador disparo="3.0">
+            <trayectoria velocidad="1.5" puntos="5">
+              <punto x="20" z="20" />
+              <punto x="20" z="40" />
+              <punto x="15" z="60" />
+              <punto x="10" z="80" />
+              <punto x="10" z="40" />
+            </trayectoria>
+          </jugador>
+
+          <contrincantes cantidad="2">
+
+              <contrincante disparo="5.0">
+                <trayectoria  velocidad="1" puntos="2">
+                    <punto x="40" z="20" />
+                    <punto x="80" z="20" />
+                </trayectoria>
+              </contrincante>
+
+              <contrincante disparo="5.95">
+                <trayectoria  velocidad="0.5" puntos="1">
+                    <punto x="80" z="50" />
+                </trayectoria>
+              </contrincante>
+
+          </contrincantes>
+
+          <objetos cantidad="7">
+            
+            <objeto>
+              <esfera tamano="50">
+                  <punto x="100" z="70" y="0"/>
+              </esfera>
+            </objeto>
+            
+            <objeto>
+              <maya archivo="~/test.ply">
+                  <punto x="50" z="50" />
+              </maya>
+            </objeto>
+
+            <objeto>
+              <esfera tamano="5">
+                  <punto x="20" z="5" />
+              </esfera>
+            </objeto>
+            
+            <objeto>
+              <cubo tamano="2">
+                  <punto x="1" z="25" />
+              </cubo>
+            </objeto>
+            
+            <objeto>
+              <esfera tamano="10">
+                  <punto x="10" z="40" />
+              </esfera>
+            </objeto>
+            
+            <objeto>
+              <esfera tamano="5">
+                  <punto x="0" z="0" />
+              </esfera>
+            </objeto>
+            
+            <objeto>
+              <cubo tamano="4">
+                  <punto x="20" z="20" />
+              </cubo>
+            </objeto>
+
+          </objetos>
+
+        </nivel>
+
+
+        <nivel id="2" tiempo_juego="480" >  
+
+          <jugador disparo="1.5">
+            <trayectoria velocidad="0.8" puntos="5">
+              <punto x="20" z="20" />
+              <punto x="20" z="40" />
+              <punto x="15" z="60" />
+              <punto x="10" z="80" />
+              <punto x="10" z="40" />
+            </trayectoria>
+          </jugador>
+
+          <contrincantes cantidad="1">
+
+              <contrincante disparo="0.90">
+                <trayectoria  velocidad="1.3" puntos="2">
+                    <punto x="40" z="20" />
+                    <punto x="80" z="20" />
+                </trayectoria>
+              </contrincante>
+
+          </contrincantes>
+
+          <objetos cantidad="2">
+
+            <objeto>
+              <maya archivo="~/test2.obj">
+                  <punto x="50" z="50" />
+              </maya>
+            </objeto>
+
+            <objeto>
+              <esfera tamano="5">
+                  <punto x="20" z="5" />
+              </esfera>
+            </objeto>
+
+          </objetos>
+
+        </nivel>
+
+    </niveles>
+</proyecto>

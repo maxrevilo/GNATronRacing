@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="79">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df name="Tron Racing" root=".">
+      <df name="Compiled">
+        <df name="Content">
+          <df name="Obstacles">
+          </df>
+          <df name="Scenarios">
+          </df>
+          <df name="Shaders">
+          </df>
+          <df name="Vehicles">
+          </df>
+        </df>
+      </df>
+      <df name="GNAFramework">
+        <df name="CPPS">
+          <in>AdaptacionesDeFunciones.cpp</in>
+          <in>AdaptacionesDeFunciones.h</in>
+          <in>BlendState.cpp</in>
+          <in>Color.cpp</in>
+          <in>ContentManager.cpp</in>
+          <in>DepthStencilState.cpp</in>
+          <in>Effect.cpp</in>
+          <in>EffectParameter.cpp</in>
+          <in>EffectParameterCollection.cpp</in>
+          <in>GNAExeptions.cpp</in>
+          <in>Game.cpp</in>
+          <in>GameWindow.cpp</in>
+          <in>Geom.cpp</in>
+          <in>GraphicDevice.cpp</in>
+          <in>IndexBuffer.cpp</in>
+          <in>Keyboard.cpp</in>
+          <in>MathHelper.cpp</in>
+          <in>Mouse.cpp</in>
+          <in>RasterizerState.cpp</in>
+          <in>SpriteBatch.cpp</in>
+          <in>SpriteFont.cpp</in>
+          <in>StaticShaders.cpp</in>
+          <in>StaticShaders.h</in>
+          <in>Texture2D.cpp</in>
+          <in>TimeSpan.cpp</in>
+          <in>VertexBuffer.cpp</in>
+          <in>VertexDeclaration.cpp</in>
+        </df>
+        <in>BlendState.h</in>
+        <in>BufferEnums.h</in>
+        <in>Color.h</in>
+        <in>ContentManager.h</in>
+        <in>DepthStencilState.h</in>
+        <in>Effect.h</in>
+        <in>EffectParameter.h</in>
+        <in>EffectParameterCollection.h</in>
+        <in>GNAExeptions.h</in>
+        <in>Game.h</in>
+        <in>GameWindow.h</in>
+        <in>Geom.h</in>
+        <in>GraphicDevice.h</in>
+        <in>IndexBuffer.h</in>
+        <in>Keyboard.h</in>
+        <in>MathHelper.h</in>
+        <in>Mouse.h</in>
+        <in>RasterizerState.h</in>
+        <in>SpriteBatch.h</in>
+        <in>SpriteFont.h</in>
+        <in>SurfaceFormat.h</in>
+        <in>Texture.h</in>
+        <in>Texture2D.h</in>
+        <in>Textures.h</in>
+        <in>TimeSpan.h</in>
+        <in>VertexBuffer.h</in>
+        <in>VertexDeclaration.h</in>
+      </df>
+      <df name="Graficas">
+        <in>Camera.h</in>
+        <in>Cube_mesh.h</in>
+        <in>GraphicManager.cpp</in>
+        <in>GraphicManager.h</in>
+        <in>Scenario.h</in>
+        <in>Sphere_mesh.h</in>
+      </df>
+      <df name="Logica">
+        <df name="CPPS">
+          <in>Match.cpp</in>
+          <in>MatchDescriptors.cpp</in>
+        </df>
+        <in>Cube.h</in>
+        <in>Level.h</in>
+        <in>Match.h</in>
+        <in>MatchActors.h</in>
+        <in>MatchDescriptors.h</in>
+        <in>Plane.h</in>
+        <in>Ray.h</in>
+        <in>Sphere.h</in>
+      </df>
+      <df name="Managers">
+        <df name="CPP">
+          <in>DataProvider.cpp</in>
+          <in>DebugManager.cpp</in>
+          <in>InputManager.cpp</in>
+          <in>SpriteBatchManager.cpp</in>
+        </df>
+        <in>DataProvider.h</in>
+        <in>DebugManager.h</in>
+        <in>InputManager.h</in>
+        <in>SpriteBatchManager.h</in>
+      </df>
+      <df name="tinyxml">
+        <in>tinystr.cpp</in>
+        <in>tinystr.h</in>
+        <in>tinyxml.cpp</in>
+        <in>tinyxml.h</in>
+        <in>tinyxmlerror.cpp</in>
+        <in>tinyxmlparser.cpp</in>
+      </df>
+      <df name="trimesh">
+        <in>Color.h</in>
+        <in>OBJLoader.h</in>
+        <in>TriMesh.h</in>
+        <in>Vec.h</in>
+      </df>
+      <in>main.cpp</in>
+    </df>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
+  <sourceRootList>
+    <Elem>.</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>default</compilerSet>
+      </toolsSet>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>.</buildCommandWorkingDir>
+          <buildCommand>${MAKE} -f Makefile</buildCommand>
+          <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
+          <executablePath>Compiled/juego.exe</executablePath>
+          <ccTool>
+            <incDir>
+              <pElem></pElem>
+            </incDir>
+          </ccTool>
+        </makeTool>
+      </makefileType>
+      <item path="Graficas/Scenario.h" ex="true" tool="3" flavor="0">
+      </item>
+      <item path="trimesh/Color.h" ex="true" tool="3" flavor="0">
+      </item>
+      <item path="trimesh/TriMesh.h" ex="true" tool="3" flavor="0">
+      </item>
+      <item path="trimesh/Vec.h" ex="true" tool="3" flavor="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
