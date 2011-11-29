@@ -2,24 +2,6 @@
 <configurationDescriptor version="79">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <df name="Tron Racing" root=".">
-      <df name="build">
-        <df name="Debug">
-          <df name="MinGW-Windows">
-            <df name="GNAFramework">
-              <df name="CPPS">
-              </df>
-            </df>
-            <df name="Graficas">
-            </df>
-            <df name="Logica">
-              <df name="CPPS">
-              </df>
-            </df>
-            <df name="tinyxml">
-            </df>
-          </df>
-        </df>
-      </df>
       <df name="Compiled">
         <df name="Content">
           <df name="Obstacles">
@@ -31,6 +13,13 @@
           <df name="Vehicles">
           </df>
         </df>
+      </df>
+      <df name="GameActors">
+        <df name="CPP">
+          <in>Scenario.cpp</in>
+        </df>
+        <in>GameActor.h</in>
+        <in>Scenario.h</in>
       </df>
       <df name="GNAFramework">
         <df name="CPPS">
@@ -112,6 +101,18 @@
         <in>Ray.h</in>
         <in>Sphere.h</in>
       </df>
+      <df name="Managers">
+        <df name="CPP">
+          <in>DataProvider.cpp</in>
+          <in>DebugManager.cpp</in>
+          <in>InputManager.cpp</in>
+          <in>SpriteBatchManager.cpp</in>
+        </df>
+        <in>DataProvider.h</in>
+        <in>DebugManager.h</in>
+        <in>InputManager.h</in>
+        <in>SpriteBatchManager.h</in>
+      </df>
       <df name="tinyxml">
         <in>tinystr.cpp</in>
         <in>tinystr.h</in>
@@ -126,10 +127,6 @@
         <in>TriMesh.h</in>
         <in>Vec.h</in>
       </df>
-      <in>DataProvider.cpp</in>
-      <in>DataProvider.h</in>
-      <in>InputManager.cpp</in>
-      <in>InputManager.h</in>
       <in>main.cpp</in>
     </df>
     <logicalFolder name="ExternalFiles"

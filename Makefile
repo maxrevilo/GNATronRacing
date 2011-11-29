@@ -22,10 +22,10 @@ OBJFILES  := $(patsubst %.cpp,%.o,$(wildcard $(TARGETS)))
 
 
 all: $(OBJFILES)
-	$(CC) -o $(EXECUTABLE) $(OBJFILES) $(LIBS)
+	$(CC) -g  -o $(EXECUTABLE) $(OBJFILES) $(LIBS)
 	
 %.o: %.cpp
-	$(COMPILE) -o $@ $<
+	$(COMPILE) -g  -o $@ $<
 	
 clean:
 	rm -f $(OBJFILES)

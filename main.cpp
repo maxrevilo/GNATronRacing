@@ -9,9 +9,10 @@
 #include "GNAFramework/Mouse.h"
 #include "GNAFramework/SpriteFont.h"
 
-#include "InputManager.h"
-#include "Logica/Match.h"
-#include "DataProvider.h"
+#include "Managers/InputManager.h"
+#include "Managers/DataProvider.h"
+#include "Managers/DebugManager.h"
+
 
 using namespace GNAFramework;
 
@@ -19,38 +20,33 @@ using namespace GNAFramework;
 class TronRacing : public Game {
 public:
     
-    //Manejador de entrada:
     InputManager im;
     
     
     enum EstadoJuego {
         Lobby,
-        Playing
+        Loading,
+        Playing,
+        WaitingNextLVL,
+        GameOver
     } game_state;
-    
-    Match *match;
 
     TronRacing(){
         Content->RootDirectory = (char *) "Content/";
     }
 
     virtual void Initialize() {
-        printf("1");
+        DebugManager::debugInfo("Initialazing ImputManager.");
         im.Initialize();
-        printf("2");
         
-        game_state = Lobby;
-        
-        DataProvider::loadGameDescription("GAME_CONF.xml");
-        printf("3");
+        DebugManager::debugInfo("Loading GAME_CONF.xml.");
+        DataManager::loadGameDescription("GAME_CONF.xml");
         
         
+        DebugManager::debugInfo("Initialazing GNAGame.");
         Game::Initialize();
-        printf("4");
         
-        GraphicManager::Initialize(this);
-        
-        printf("5\n");
+        DebugManager::debugInfo("Tron Race Initialized.");
     }
 
     
@@ -63,16 +59,9 @@ public:
         
         switch(game_state) {
             case Lobby:
-                printf("6 Creating Match\n");
-                match = new Match(this);
-                game_state = Playing;
-                printf("7 Match Created\n");
                 break;
                 
             case Playing:
-                printf("8 Updating Match\n");
-                match->Update(gameTime);
-                printf("9 Updating Created\n");
                 break;
         }
 
@@ -85,15 +74,10 @@ public:
     virtual void Draw(GameTime gameTime) {
         graphicDevice->Clear(Color_GNA::Grey);
         
-        //if(Mouse::getMouseVisibility())
-        //        Mouse::setMouseVisibility(true);
-        
         switch(game_state) {
             case Lobby:
-                
-            break;
+                break;
             case Playing:
-                match->Draw(gameTime);
                 break;
         }
 
@@ -101,6 +85,7 @@ public:
     }
 
     virtual void Exit(){
+        DebugManager::debugInfo("Calling to Exit().");
         Game::Exit();
     }
 
@@ -109,8 +94,9 @@ public:
 
 
 int main(int argc, char** argv) {
+    DebugManager::debugInfo("Instantiating TronRacing game.");
     TronRacing game;
-    printf("0");
+    DebugManager::debugInfo("Starting Game.");
     game.Start();
     
     return 0;
