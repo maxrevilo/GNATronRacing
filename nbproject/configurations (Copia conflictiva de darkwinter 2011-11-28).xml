@@ -96,12 +96,12 @@
       </df>
       <df name="Managers">
         <df name="CPP">
-          <in>DataProvider.cpp</in>
+          <in>DataManager.cpp</in>
           <in>DebugManager.cpp</in>
           <in>InputManager.cpp</in>
           <in>SpriteBatchManager.cpp</in>
         </df>
-        <in>DataProvider.h</in>
+        <in>DataManager.h</in>
         <in>DebugManager.h</in>
         <in>InputManager.h</in>
         <in>SpriteBatchManager.h</in>

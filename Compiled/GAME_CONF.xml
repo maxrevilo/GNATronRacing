@@ -1,7 +1,19 @@
 <?xml version="1.0" ?>
 
-<camara>
-    <posicion x="50" y="60" z="0"/>
-    <centro   x="0" y="-5" z="0"/>
-</camara>
+<conf>
+    <!-- Contiene la lista de niveles del juego, cada nivel tiene un path con su
+         ubicacion relativa a la carpeta Levels. -->
+    <campaing>
+        <!-- there is a maximun of 20 levels -->
+        <level path="lvl_1.xml" />
+    </campaing>
+    
+    <!-- Warning: Set verbose to "true" will increase the output file's weight
+         while the game run. -->
+    <debuger verbose="false" />
+    
+    
+    
+</conf>
+
 

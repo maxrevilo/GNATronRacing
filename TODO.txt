@@ -44,7 +44,7 @@ Basico:
         
     GUI:
         Vidas.
-        Vida.
+        Vida (Con color de camara).
         Turbo.
         Camara Actual.
         Direccion de salida.

@@ -8,7 +8,7 @@
 #include "../GNAFramework/Effect.h"
 
 #include "../Logica/Match.h"
-#include "../DataProvider.h"
+#include "../DataManager.h"
 #include "Camera.h"
 #include "Cube_mesh.h"
 #include "Sphere_mesh.h"

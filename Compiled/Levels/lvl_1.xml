@@ -1,0 +1,42 @@
+<?xml version="1.0" ?>
+<level name="Nivel 1" title="Training">
+    <!-- Units expressed on 1 = 2 lightCycles -->
+    <scenario width="10" height="20">
+        
+        <!--<meshes lenght="2">
+            <mesh width="1.0" height="1.0">
+                <position  x="2.0" y="2.0"           />
+                <dimension x="1.0" y="1.0" z="0.1"   />
+                <!-- Paths relative to Content/ folder --><!--
+                <heightmap path="Heightmaps/hm1.bmp" />
+                <colormap  path="Heightmaps/cm1.bmp" />
+            </mesh>
+            <mesh>
+                <position  x="0.0" y="10.0"          />
+                <dimension x="0.5" y="10.0" z="0.1"  />
+                <heightmap path="Heightmaps/hm1.bmp" />
+                <colormap  path="Heightmaps/cm1.bmp" />
+            </mesh>
+        </meshes> -->
+        
+    </scenario>
+    
+    
+    <exit_position x="5.0" y="19.5" />
+    
+    <player>
+        <position x="2.0" y="2.0" />
+        <color    r="255" g="255" b="255" />
+        
+    </player>
+    
+    <enemys length="2">
+        <enemy>
+            
+        </enemy>
+    </enemys>
+    
+    <!-- Fireworks -->
+    
+    
+</level>

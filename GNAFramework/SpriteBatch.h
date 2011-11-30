@@ -47,7 +47,7 @@ namespace GNAFramework {
          * @param color La textura es entintada por este color, para no alterar el
          * color se debe usar blanco Color::White.
          */
-        void Draw(const Texture2D *texture, RectangleF dest, Color_GNA color) throw (InvalidOperationException *);
+        void Draw(const Texture2D *texture, RectangleF dest, Color color) throw (InvalidOperationException *);
 
         /**
          * Dibuja una textura en pantalla en la posicion y dimenciones indicadas por
@@ -61,7 +61,7 @@ namespace GNAFramework {
          * @param color La textura es entintada por este color, para no alterar el
          * color se debe usar blanco Color::White.
          */
-        void Draw(const Texture2D *texture, RectangleF dest, float rotation, Vector2 origin, Color_GNA color) throw (InvalidOperationException *);
+        void Draw(const Texture2D *texture, RectangleF dest, float rotation, Vector2 origin, Color color) throw (InvalidOperationException *);
 
         /**
          * Dibuja una sub seccion de la textura en pantalla en la posicion y
@@ -78,12 +78,12 @@ namespace GNAFramework {
          * @param color La textura es entintada por este color, para no alterar el
          * color se debe usar blanco Color::White.
          */
-        void Draw(const Texture2D *texture, RectangleF dest, RectangleF src, float rotation, Vector2 origin, Color_GNA color) throw (InvalidOperationException *);
+        void Draw(const Texture2D *texture, RectangleF dest, RectangleF src, float rotation, Vector2 origin, Color color) throw (InvalidOperationException *);
 
         
-        void DrawString(const SpriteFont *spriteFont, const char *text, Vector2 position, Color_GNA color) throw (InvalidOperationException *);
+        void DrawString(const SpriteFont *spriteFont, const char *text, Vector2 position, Color color) throw (InvalidOperationException *);
         
-        void DrawString(const SpriteFont *spriteFont, const char *text, Vector2 position, float rotation, Vector2 origin, Color_GNA color) throw (InvalidOperationException *);
+        void DrawString(const SpriteFont *spriteFont, const char *text, Vector2 position, float rotation, Vector2 origin, Color color) throw (InvalidOperationException *);
 
 
         void Begin() throw (InvalidOperationException *);

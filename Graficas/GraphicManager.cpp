@@ -68,7 +68,7 @@ void GraphicManager::DrawMatchLoading() {
 
     game->graphicDevice->DeepBufferEnabled(false);
     spriteBatch->Begin(SpriteBatch::Immediate, BlendState::NonPremultiplied);
-    spriteBatch->Draw(loading_tex, RectangleF(0.f, 0.f, 800.f, 600.f), Color_GNA::White);
+    spriteBatch->Draw(loading_tex, RectangleF(0.f, 0.f, 800.f, 600.f), Color::White);
     spriteBatch->DrawString(font.title, "TRON: Disc Battle", Vector2(20.f, 10.f), DataManager::loading_color);
     spriteBatch->DrawString(font.text, "Cargando...", DataManager::loading_pos, DataManager::loading_color);
     spriteBatch->End();
@@ -282,7 +282,7 @@ void GraphicManager::DrawMatch(Match *match){
             glEnd();
             
             Plane pl(Vector3(), Vector3::Up);
-            Vector3 p = pl.NearestPoint(Sphere(discs[i].position, 0.f));
+            Vector3 p = pl.NearestPoint(BoundingSphere(discs[i].position, 0.f));
             
             wvp = Matrix::CreateTranslation(p) * viewProy;
             player_effect->getParameter("rMatWorldViewProjection").SetValue<Matrix > (&wvp);

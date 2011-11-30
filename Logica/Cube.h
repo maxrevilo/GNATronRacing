@@ -24,7 +24,7 @@ public:
         p1 = Vector3( 0.5, -0.5,  0.5) * size;
     }
     
-    bool Intersects(Sphere value) const{
+    bool Intersects(BoundingSphere value) const{
         return Contains(value.Center());
     }
     

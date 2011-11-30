@@ -4,20 +4,22 @@
     <df name="Tron Racing" root=".">
       <df name="Compiled">
         <df name="Content">
-          <df name="Obstacles">
-          </df>
-          <df name="Scenarios">
+          <df name="Scenario">
           </df>
           <df name="Shaders">
           </df>
           <df name="Vehicles">
           </df>
         </df>
+        <df name="Levels">
+        </df>
       </df>
       <df name="GameActors">
         <df name="CPP">
+          <in>GameActor.cpp</in>
           <in>Scenario.cpp</in>
         </df>
+        <in>Camera.h</in>
         <in>GameActor.h</in>
         <in>Scenario.h</in>
       </df>
@@ -40,6 +42,7 @@
           <in>IndexBuffer.cpp</in>
           <in>Keyboard.cpp</in>
           <in>MathHelper.cpp</in>
+          <in>Model.cpp</in>
           <in>Mouse.cpp</in>
           <in>RasterizerState.cpp</in>
           <in>SpriteBatch.cpp</in>
@@ -67,6 +70,7 @@
         <in>IndexBuffer.h</in>
         <in>Keyboard.h</in>
         <in>MathHelper.h</in>
+        <in>Model.h</in>
         <in>Mouse.h</in>
         <in>RasterizerState.h</in>
         <in>SpriteBatch.h</in>
@@ -80,7 +84,6 @@
         <in>VertexDeclaration.h</in>
       </df>
       <df name="Graficas">
-        <in>Camera.h</in>
         <in>Cube_mesh.h</in>
         <in>GraphicManager.cpp</in>
         <in>GraphicManager.h</in>
@@ -103,12 +106,12 @@
       </df>
       <df name="Managers">
         <df name="CPP">
-          <in>DataProvider.cpp</in>
+          <in>DataManager.cpp</in>
           <in>DebugManager.cpp</in>
           <in>InputManager.cpp</in>
           <in>SpriteBatchManager.cpp</in>
         </df>
-        <in>DataProvider.h</in>
+        <in>DataManager.h</in>
         <in>DebugManager.h</in>
         <in>InputManager.h</in>
         <in>SpriteBatchManager.h</in>
@@ -122,10 +125,7 @@
         <in>tinyxmlparser.cpp</in>
       </df>
       <df name="trimesh">
-        <in>Color.h</in>
         <in>OBJLoader.h</in>
-        <in>TriMesh.h</in>
-        <in>Vec.h</in>
       </df>
       <in>main.cpp</in>
     </df>
@@ -161,12 +161,6 @@
         </makeTool>
       </makefileType>
       <item path="Graficas/Scenario.h" ex="true" tool="3" flavor="0">
-      </item>
-      <item path="trimesh/Color.h" ex="true" tool="3" flavor="0">
-      </item>
-      <item path="trimesh/TriMesh.h" ex="true" tool="3" flavor="0">
-      </item>
-      <item path="trimesh/Vec.h" ex="true" tool="3" flavor="0">
       </item>
     </conf>
   </confs>

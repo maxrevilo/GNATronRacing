@@ -17,9 +17,11 @@ namespace GNAFramework {
             template <class T>
             void SetValue(const T *value);
             
+            EffectParameter();
+            
             virtual ~EffectParameter();
         private:
-            EffectParameter();
+            
             EffectParameter(GLint ubicacion, const char *nombre, int *actualTexturePosition);
             static int texturePosition;
             int *actualTexturePosition;

@@ -15,17 +15,17 @@ class Player{
 public:
     int       life;
     Player_d *descriptor;
-    Sphere    area[3];
+    BoundingSphere    area[3];
     float     time_to_shoot;
     
     bool ia_activated;
     
-    static Color_GNA color(int index) {
+    static Color color(int index) {
         switch (index){
-            case 0: return Color_GNA::Blue;
-            case 1: return Color_GNA::Red;
-            case 2: return Color_GNA::Green;
-            default: return Color_GNA(1.f, 0.5f, 0.f, 1.f); //Orange
+            case 0: return Color::Blue;
+            case 1: return Color::Red;
+            case 2: return Color::Green;
+            default: return Color(1.f, 0.5f, 0.f, 1.f); //Orange
         }
     }
     
@@ -44,7 +44,7 @@ public:
         shoot_desc.requested = false;
 
         float radio = descriptor->height / 2.f;
-        area[0] = Sphere(Vector3(0.f, radio, 0.f), radio);
+        area[0] = BoundingSphere(Vector3(0.f, radio, 0.f), radio);
         area[2] = area[1] = area[0]; 
         // </editor-fold>
     };
@@ -203,15 +203,15 @@ public:
     
     float size() const { return DISC_SIZE; }
     
-    Sphere area()const {
-        return Sphere(Vector3(), size() / 2.f);
+    BoundingSphere area()const {
+        return BoundingSphere(Vector3(), size() / 2.f);
     }
     
     void bounce(Cube cube) {
-        bounce( Sphere(cube.Center(), abs(cube.p1.X - cube.p0.X)) );
+        bounce( BoundingSphere(cube.Center(), abs(cube.p1.X - cube.p0.X)) );
     }
     
-    void bounce(Sphere sphere) {
+    void bounce(BoundingSphere sphere) {
         Vector3 norm = Vector3::Normalize(position - sphere.Center());
         velocity = Vector3::Reflect(norm, velocity);
         position = sphere.Center() + norm * (sphere.Radio() + size());
@@ -229,7 +229,7 @@ public:
     
     bool hitTest(Player *player) const {
         // <editor-fold defaultstate="collapsed" desc="code">
-        Sphere sph(position - player->position(), size()/2.f);
+        BoundingSphere sph(position - player->position(), size()/2.f);
         for (int i = 0; i < 3; i++) {
             if (sph.Intersects(player->area[i])) return true;
         }
@@ -287,7 +287,7 @@ public:
             }
             case Obstacle_d::Sphere:
             {
-                Sphere sph(position() - player->position(), size()/2.f);
+                BoundingSphere sph(position() - player->position(), size()/2.f);
                 for (int i = 0; i < 3; i++) {
                     if (sph.Intersects(player->area[i])) return true;
                 }
@@ -307,7 +307,7 @@ public:
                 return cube.Intersects(disc->area());
             }
             case Obstacle_d::Sphere: {
-                Sphere sph(position() - disc->position, size()/2.f);
+                BoundingSphere sph(position() - disc->position, size()/2.f);
                 
                 return sph.Intersects(disc->area());
             }
@@ -324,9 +324,9 @@ public:
         return false;
     }
     
-    bool sphere_area(Sphere *sph) const {
+    bool sphere_area(BoundingSphere *sph) const {
         if(type() == Obstacle_d::Sphere) {
-            *sph = Sphere(position(), size() / 2.f);
+            *sph = BoundingSphere(position(), size() / 2.f);
             return true;
         }
         return false;

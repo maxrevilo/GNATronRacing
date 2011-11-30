@@ -1,7 +1,7 @@
 #include "../Match.h"
 #include "../../GNAFramework/MathHelper.h"
 #include "../../GNAFramework/GNAExeptions.h"
-#include "../../DataProvider.h"
+#include "../../DataManager.h"
 #include "../Plane.h"
 #include "../Ray.h"
 
@@ -182,7 +182,7 @@ void Match::Update(GameTime gameTime) {
                                 discs[i].hitPoints--;
 
                                 Cube cube;
-                                Sphere sphere;
+                                BoundingSphere sphere;
                                 if(obstacles[j].cube_area(&cube)) {
                                     discs[i].bounce(cube);
                                 } else if(obstacles[j].sphere_area(&sphere)){

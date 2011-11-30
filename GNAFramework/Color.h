@@ -5,22 +5,22 @@
 #include "Geom.h"
 
 namespace GNAFramework {
-    struct Color_GNA {
+    struct Color {
     public:
         uint8_t R;
         uint8_t G;
         uint8_t B;
         uint8_t A;
 
-        static const Color_GNA White;
-        static const Color_GNA Red;
-        static const Color_GNA Green;
-        static const Color_GNA Blue;
-        static const Color_GNA Black;
-        static const Color_GNA Grey;
-        static const Color_GNA DarkGrey;
+        static const Color White;
+        static const Color Red;
+        static const Color Green;
+        static const Color Blue;
+        static const Color Black;
+        static const Color Grey;
+        static const Color DarkGrey;
 
-        Color_GNA();
+        Color();
 
         /**
          * Crea un color a partir de 4 componentes decimales, donde 1 indica que el
@@ -30,16 +30,16 @@ namespace GNAFramework {
          * @param G
          * @param B
          */
-        Color_GNA(float A, float R, float G, float B);
+        Color(float A, float R, float G, float B);
         /**
          * Crea un color a partir de un Vector4, donde cada componente del vector
          * representan los canales A R G y B en ese orden, la componente indica
          * que tan lleno esta cada canal con 0 como minimo y 1 como ful.
          * @param vect
          */
-        Color_GNA(Vector4 vect);
+        Color(Vector4 vect);
 
-        Color_GNA(uint8_t A, uint8_t R, uint8_t G, uint8_t B);
+        Color(uint8_t A, uint8_t R, uint8_t G, uint8_t B);
 
         void setValue(uint8_t A, uint8_t R, uint8_t G, uint8_t B);
 
@@ -49,8 +49,8 @@ namespace GNAFramework {
 
         Vector4 toVector4() const;
 
-        bool operator ==(const Color_GNA & other) const;
-        bool operator !=(const Color_GNA & other) const;
+        bool operator ==(const Color & other) const;
+        bool operator !=(const Color & other) const;
 
         char * toString() const;
 

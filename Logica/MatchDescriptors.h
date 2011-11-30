@@ -30,7 +30,7 @@ struct Pathway_d {
 struct Player_d {
     float shoot;
     Pathway_d pathway;
-    Color_GNA color;
+    Color color;
     
     float   height;
     

@@ -25,6 +25,8 @@ namespace GNAFramework {
             X = Y = width = height = 0;
         }
         
+        float aspectRatio() { return (float) width / (float) height; }
+        
         //Vector3 Unproject(Vector3 source, Matrix projection, Matrix view, Matrix world);
     } ;
     
@@ -83,8 +85,8 @@ namespace GNAFramework {
         );
 
 
-        void Clear(Color_GNA color);
-        void Clear(ClearOptions Mask, Color_GNA color, GLclampd depth, int stencil);
+        void Clear(Color color);
+        void Clear(ClearOptions Mask, Color color, GLclampd depth, int stencil);
 
         GameWindow *getGameWindow();
 
@@ -100,7 +102,7 @@ namespace GNAFramework {
         VertexBuffer vertexBuffer;
         bool fullScreen;
         GameWindow *gameWindow;
-        Color_GNA *clearColor;
+        Color *clearColor;
     };
 }
 

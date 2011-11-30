@@ -517,6 +517,48 @@ namespace GNAFramework {
         static const float iValues[16];
         static const float onesValues[16];
     };
+    
+    
+    struct BoundingSphere {
+    public:
+        float X, Y, Z;
+        float R;
+
+        BoundingSphere(){
+            X = 0.f; Y = 0.f; Z = 0.f; R = 1.f;
+        }
+
+        BoundingSphere(Vector3 pos, float radio){
+            X = pos.X; Y = pos.Y; Z = pos.Z; R = radio;
+        }
+
+        BoundingSphere(float x, float y, float z, float radio){
+            X = x; Y = y; Z = z; R = radio;
+        }
+
+        Vector3 Center() const { return Vector3(X,Y,Z); }
+
+        void setCenter(Vector3 center) {
+            X = center.X; Y = center.Y; Z = center.Z;
+        }
+
+        float Radio()const { return R; }
+
+        bool Intersects(BoundingSphere value) const{
+            float dX = X - value.X, dY = Y - value.Y, dZ = Z - value.Z;
+            float dR = R + value.R;
+            return dX*dX + dY*dY + dZ*dZ <= dR * dR;
+        }
+
+        bool Contains(Vector3 value) const{
+            float dX = X - value.X, dY = Y - value.Y, dZ = Z - value.Z;
+            return dX*dX + dY*dY + dZ*dZ <= R*R;
+        }
+
+        virtual ~BoundingSphere() {}
+    private:
+
+    };
 }
 
 #endif	/* GEOM_H */

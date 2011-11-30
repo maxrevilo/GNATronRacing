@@ -26,7 +26,7 @@ void SpriteBatch::set2DDrawState(){
     glLoadIdentity();
 }
 
-void SpriteBatch::Draw(const Texture2D *texture, RectangleF rect, Color_GNA color) throw(InvalidOperationException *){
+void SpriteBatch::Draw(const Texture2D *texture, RectangleF rect, Color color) throw(InvalidOperationException *){
 
     Vector4 fColor = color.toVector4();
 
@@ -56,7 +56,7 @@ void SpriteBatch::Draw(const Texture2D *texture, RectangleF rect, Color_GNA colo
 }
 
 void SpriteBatch::Draw(const Texture2D *texture, RectangleF rect,
-                                                    float ang, Vector2 center, Color_GNA color) throw(InvalidOperationException *){
+                                                    float ang, Vector2 center, Color color) throw(InvalidOperationException *){
     if(!begin) new InvalidOperationException(Exception_MSG(Draw_MSG));
     
 
@@ -104,7 +104,7 @@ void SpriteBatch::Draw(const Texture2D *texture, RectangleF rect,
 }
 
 void SpriteBatch::Draw(const Texture2D *texture, RectangleF dest, RectangleF src,
-                                                    float ang, Vector2 center, Color_GNA color) throw(InvalidOperationException *){
+                                                    float ang, Vector2 center, Color color) throw(InvalidOperationException *){
     if(!begin) throw new InvalidOperationException(Exception_MSG(Draw_MSG));
 
     src.X /= texture->getWidth();
@@ -160,7 +160,7 @@ void SpriteBatch::Draw(const Texture2D *texture, RectangleF dest, RectangleF src
 }
 
 void SpriteBatch::DrawString(const SpriteFont *spriteFont, const char *text, Vector2 position,
-                                    float rotation, Vector2 origin, Color_GNA color)
+                                    float rotation, Vector2 origin, Color color)
 throw (InvalidOperationException *)
 {
     SDL_Color sdl_color = {255,255,255};
@@ -176,7 +176,7 @@ throw (InvalidOperationException *)
     delete texture;
 }
 
-void SpriteBatch::DrawString(const SpriteFont *spriteFont, const char *text, Vector2 position, Color_GNA color)
+void SpriteBatch::DrawString(const SpriteFont *spriteFont, const char *text, Vector2 position, Color color)
 throw (InvalidOperationException *)
 {
     SDL_Color sdl_color = {255,255,255};

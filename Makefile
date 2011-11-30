@@ -2,9 +2,9 @@ CC = g++
 
 EXECUTABLE = Compiled/juego
 
-LIBS       = -lmingw32 -lopengl32 -lSDLmain -lSDL -lSDL_ttf 
+LIBS       = -lmingw32 -lopengl32 -lSDLmain -lSDL -lSDL_ttf  -Dmain=SDLmain -mwindows
 
-CFLAGS     = -Wuninitialized -std=c++0x
+CFLAGS     = -std=c++0x
 
 COMPILE    = $(CC) $(CFLAGS) -c
 
@@ -17,8 +17,6 @@ GAME       = Managers/CPP/*.cpp GameActors/CPP/*.cpp *.cpp
 TARGETS    = $(GNA_FW) $(TINY_XML) $(GAME)
 
 OBJFILES  := $(patsubst %.cpp,%.o,$(wildcard $(TARGETS)))
-
-
 
 
 all: $(OBJFILES)

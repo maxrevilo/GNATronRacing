@@ -6,7 +6,7 @@
 #include <string.h>
 
 #define Debug(x){MessageBox(NULL, x, "Debug:", MB_OK);}
-
+/*
 struct vertex
 {
 	float x, y, z;
@@ -369,6 +369,6 @@ void model::draw()
 	}
 #endif
 }
-
+*/
 #endif	/* OBJLOADER_H */
 

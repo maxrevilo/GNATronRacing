@@ -39,7 +39,7 @@ namespace GNAFramework {
          * @param x
          * @param y
          */
-        void setPixel(Color_GNA data, int x, int y);
+        void setPixel(Color data, int x, int y);
         
         
         GLuint Pointer() const{ return pointer; };
@@ -52,7 +52,7 @@ namespace GNAFramework {
          * @param rect
          * @return
          */
-        void setPixelsRegion(Color_GNA data, RectangleF rect);
+        void setPixelsRegion(Color data, RectangleF rect);
 
         virtual ~Texture2D();
 
@@ -63,8 +63,8 @@ namespace GNAFramework {
         GLuint pointer;
         GraphicDevice *graphicDevice;
 
-        static Color_GNA RawToARGB(const uint8_t * raw, SurfaceFormat format);
-        static void ARGBToRaw(Color_GNA color, SurfaceFormat format, uint8_t *raw);
+        static Color RawToARGB(const uint8_t * raw, SurfaceFormat format);
+        static void ARGBToRaw(Color color, SurfaceFormat format, uint8_t *raw);
 
         void init(GraphicDevice *graphicsDevice, int width, int height, bool mipMap, SurfaceFormat format);
 

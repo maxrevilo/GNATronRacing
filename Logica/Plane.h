@@ -16,7 +16,7 @@ public:
         this->Position = Point; this->Normal = Normal;
     }
     
-    Vector3 NearestPoint(Sphere value) const{
+    Vector3 NearestPoint(BoundingSphere value) const{
         float t = Vector3::Dot(Position - value.Center(), Normal) / Vector3::Dot(Normal, Normal);
         return Normal * t + value.Center();
     }

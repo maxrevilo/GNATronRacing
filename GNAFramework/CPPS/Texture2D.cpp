@@ -66,8 +66,8 @@ namespace GNAFramework {
         return result;
     }
 
-    Color_GNA Texture2D::RawToARGB(const uint8_t * raw, SurfaceFormat format) {
-        Color_GNA result;
+    Color Texture2D::RawToARGB(const uint8_t * raw, SurfaceFormat format) {
+        Color result;
 
         switch (format) {
             case RGB:
@@ -87,7 +87,7 @@ namespace GNAFramework {
         return result;
     }
 
-    void Texture2D::ARGBToRaw(Color_GNA color, SurfaceFormat format, uint8_t *raw) {
+    void Texture2D::ARGBToRaw(Color color, SurfaceFormat format, uint8_t *raw) {
         switch (format) {
             case RGB:
                 raw[0] = color.R;
@@ -123,7 +123,7 @@ namespace GNAFramework {
     }
 
     template <>
-    void Texture2D::setData<Color_GNA>(const Color_GNA *data) {
+    void Texture2D::setData<Color>(const Color *data) {
         int size = width * height;
         int i;
         uint8_t *raw = (uint8_t *) malloc(sizeof(uint8_t) * size * 4);
@@ -170,7 +170,7 @@ namespace GNAFramework {
     }
 
     template <>
-    void Texture2D::getData<Color_GNA>(Color_GNA *data, int startIndex, int elementCount) const{
+    void Texture2D::getData<Color>(Color *data, int startIndex, int elementCount) const{
         if (startIndex * elementCount < 0) {
             //perror("InalidArgument: los indices deben ser mayores a 0");
             exit(1);
@@ -201,8 +201,8 @@ namespace GNAFramework {
     }
 
     template <>
-    void Texture2D::getData<Color_GNA>(Color_GNA *data) const{
-        getData<Color_GNA > (data, 0, height * width);
+    void Texture2D::getData<Color>(Color *data) const{
+        getData<Color > (data, 0, height * width);
     }
 
 
@@ -232,8 +232,8 @@ namespace GNAFramework {
 
     //Texture2D::setData(Color* data){}
 
-    void Texture2D::setPixel(Color_GNA data, int x, int y) {
-        Color_GNA *colPointer = &data;
+    void Texture2D::setPixel(Color data, int x, int y) {
+        Color *colPointer = &data;
         uint8_t *dataIn = (uint8_t *) colPointer;
 
         glBindTexture(GL_TEXTURE_2D, this->pointer);
@@ -248,8 +248,8 @@ namespace GNAFramework {
                 dataIn);
     }
 
-    void Texture2D::setPixelsRegion(Color_GNA data, RectangleF rect) {
-        Color_GNA *colPointer = &data;
+    void Texture2D::setPixelsRegion(Color data, RectangleF rect) {
+        Color *colPointer = &data;
         uint8_t *dataIn = (uint8_t *) colPointer;
 
         glBindTexture(GL_TEXTURE_2D, this->pointer);

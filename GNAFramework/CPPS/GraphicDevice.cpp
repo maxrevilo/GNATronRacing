@@ -63,7 +63,7 @@ GraphicDevice::GraphicDevice(int width, int height, bool fullScreen) {
     DeepBufferWritteEnabled(true);
     
 
-    clearColor = new Color_GNA(.0f, .0f, .0f, .0f);
+    clearColor = new Color(.0f, .0f, .0f, .0f);
     glClearColor(.0f, .0f, .0f, .0f);
 
     setViewPort(viewPort);
@@ -242,7 +242,7 @@ void GraphicDevice::DrawIndexedPrimitives (
 
 
 
-void GraphicDevice::Clear(ClearOptions Mask, Color_GNA color, GLclampd depth, int stencil) {
+void GraphicDevice::Clear(ClearOptions Mask, Color color, GLclampd depth, int stencil) {
     switch (Mask) {
         case Target:
             if (color != (*clearColor)) {
@@ -260,7 +260,7 @@ void GraphicDevice::Clear(ClearOptions Mask, Color_GNA color, GLclampd depth, in
     glClear(Mask);
 }
 
-void GraphicDevice::Clear(Color_GNA color) {
+void GraphicDevice::Clear(Color color) {
     Clear(Target, color, 1.0, 0);
 }
 
