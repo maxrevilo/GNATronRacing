@@ -29,7 +29,7 @@ namespace GNAFramework {
         glBindTexture(GL_TEXTURE_2D, pointer);
 
         glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
-
+        
         // Set the texture's stretching properties
         if(mipMap){
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -55,7 +55,23 @@ namespace GNAFramework {
     Texture2D::Texture2D(GraphicDevice *graphicsDevice, int width, int height, bool mipMap, SurfaceFormat format) {
         init(graphicsDevice, width, height, mipMap, format);
     }
-
+    
+    void Texture2D::UseMipMap(bool mipMap) {
+            glActiveTextureARB(GL_TEXTURE0_ARB);
+            
+            glBindTexture(GL_TEXTURE_2D, pointer);
+            
+            // Set the texture's stretching properties
+            if(mipMap){
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+                glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+            } else {
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            }
+        }
+    
     Texture2D *Texture2D::FromStream(GraphicDevice *graphicsDevice, const uint8_t *stream, int width, int height, SurfaceFormat format) {
         Texture2D *result = new Texture2D(graphicsDevice, width, height, true, format);
         
@@ -118,6 +134,7 @@ namespace GNAFramework {
 
     template <>
     void Texture2D::setData<uint8_t>(const uint8_t *data) {
+        glActiveTextureARB(GL_TEXTURE0_ARB);
         glBindTexture(GL_TEXTURE_2D, pointer);
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, format, GL_UNSIGNED_BYTE, (const GLvoid *) data);
     }
@@ -152,16 +169,17 @@ namespace GNAFramework {
             //perror("InalidArgument: fuera de los indices de la textura");
             exit(1);
         }
-
-        size *= sizeof (uint8_t);
-        uint8_t *raw = (uint8_t *) malloc(size);
-
+        
+        uint8_t *raw  = new uint8_t[size];
+        uint8_t *rawI = raw;
+        
+        glActiveTextureARB(GL_TEXTURE0_ARB);
         glBindTexture(GL_TEXTURE_2D, this->pointer);
         glGetTexImage(GL_TEXTURE_2D, 0, format, GL_UNSIGNED_BYTE, raw);
 
-        for (raw += startIndex; elementCount > 0; *data++ = *raw++, elementCount--);
+        for (rawI += startIndex; elementCount > 0; *data++ = *rawI++, elementCount--);
 
-        free(raw);
+        delete [] raw;
     }
 
     template <>
@@ -182,10 +200,13 @@ namespace GNAFramework {
             //perror("InalidArgument: fuera de los indices de la textura");
             exit(1);
         }
-
-        size *= sizeof (uint8_t) * 4;
-        uint8_t *raw = (uint8_t *) malloc(size);
+        
+        uint8_t *raw = new uint8_t[4 * size];
         uint8_t *rawI = raw;
+        
+        glActiveTextureARB(GL_TEXTURE0_ARB);
+        glBindTexture(GL_TEXTURE_2D, this->pointer);
+        glGetTexImage(GL_TEXTURE_2D, 0, format, GL_UNSIGNED_BYTE, raw);
 
         for (rawI += 4 * startIndex; elementCount > 0; elementCount--) {
             *data++ = RawToARGB(rawI, format);
@@ -194,15 +215,12 @@ namespace GNAFramework {
 
         rawI = raw + 4 * startIndex;
 
-        glBindTexture(GL_TEXTURE_2D, this->pointer);
-        glGetTexImage(GL_TEXTURE_2D, 0, format, GL_UNSIGNED_BYTE, raw);
-
-        free(raw);
+        delete [] raw;
     }
 
     template <>
     void Texture2D::getData<Color>(Color *data) const{
-        getData<Color > (data, 0, height * width);
+        getData<Color> (data, 0, height * width);
     }
 
 

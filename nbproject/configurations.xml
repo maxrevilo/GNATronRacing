@@ -4,11 +4,47 @@
     <df name="Tron Racing" root=".">
       <df name="Compiled">
         <df name="Content">
+          <df name="Heightmaps">
+          </df>
           <df name="Scenario">
+            <df name="Original">
+            </df>
           </df>
           <df name="Shaders">
           </df>
           <df name="Vehicles">
+            <df name="LightCycle">
+              <df name="Batton">
+                <df name="Original">
+                </df>
+              </df>
+              <df name="Body">
+                <df name="Original">
+                </df>
+              </df>
+              <df name="Cristal">
+              </df>
+              <df name="Disc">
+                <df name="Original">
+                </df>
+              </df>
+              <df name="Driver">
+                <df name="Original">
+                </df>
+              </df>
+              <df name="Engine">
+                <df name="Original">
+                </df>
+              </df>
+              <df name="Helmet">
+                <df name="Original">
+                </df>
+              </df>
+              <df name="Tire">
+                <df name="Original">
+                </df>
+              </df>
+            </df>
           </df>
         </df>
         <df name="Levels">
@@ -16,12 +52,32 @@
       </df>
       <df name="GameActors">
         <df name="CPP">
+          <in>CameraState.cpp</in>
+          <in>Enemy.cpp</in>
+          <in>ExitPosition.cpp</in>
           <in>GameActor.cpp</in>
+          <in>LightCycle.cpp</in>
           <in>Scenario.cpp</in>
+          <in>Trail.cpp</in>
         </df>
         <in>Camera.h</in>
+        <in>CameraState.h</in>
+        <in>Cube.h</in>
+        <in>Enemy.h</in>
+        <in>ExitPosition.h</in>
         <in>GameActor.h</in>
+        <in>LightCycle.h</in>
+        <in>Plane.h</in>
+        <in>Ray.h</in>
         <in>Scenario.h</in>
+        <in>Sphere_mesh.h</in>
+        <in>Trail.h</in>
+      </df>
+      <df name="GLM">
+        <in>Model3D.cpp</in>
+        <in>Model3D.h</in>
+        <in>glm.cpp</in>
+        <in>glm.h</in>
       </df>
       <df name="GNAFramework">
         <df name="CPPS">
@@ -83,27 +139,6 @@
         <in>VertexBuffer.h</in>
         <in>VertexDeclaration.h</in>
       </df>
-      <df name="Graficas">
-        <in>Cube_mesh.h</in>
-        <in>GraphicManager.cpp</in>
-        <in>GraphicManager.h</in>
-        <in>Scenario.h</in>
-        <in>Sphere_mesh.h</in>
-      </df>
-      <df name="Logica">
-        <df name="CPPS">
-          <in>Match.cpp</in>
-          <in>MatchDescriptors.cpp</in>
-        </df>
-        <in>Cube.h</in>
-        <in>Level.h</in>
-        <in>Match.h</in>
-        <in>MatchActors.h</in>
-        <in>MatchDescriptors.h</in>
-        <in>Plane.h</in>
-        <in>Ray.h</in>
-        <in>Sphere.h</in>
-      </df>
       <df name="Managers">
         <df name="CPP">
           <in>DataManager.cpp</in>
@@ -123,9 +158,6 @@
         <in>tinyxml.h</in>
         <in>tinyxmlerror.cpp</in>
         <in>tinyxmlparser.cpp</in>
-      </df>
-      <df name="trimesh">
-        <in>OBJLoader.h</in>
       </df>
       <in>main.cpp</in>
     </df>
@@ -151,7 +183,7 @@
         <makeTool>
           <buildCommandWorkingDir>.</buildCommandWorkingDir>
           <buildCommand>${MAKE} -f Makefile</buildCommand>
-          <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
+          <cleanCommand>${MAKE} -f Makefile clean_game</cleanCommand>
           <executablePath>Compiled/juego.exe</executablePath>
           <ccTool>
             <incDir>
@@ -160,8 +192,6 @@
           </ccTool>
         </makeTool>
       </makefileType>
-      <item path="Graficas/Scenario.h" ex="true" tool="3" flavor="0">
-      </item>
     </conf>
   </confs>
 </configurationDescriptor>

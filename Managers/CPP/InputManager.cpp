@@ -23,7 +23,7 @@ bool InputManager::KeyPressed(int key){
 }
 
 bool InputManager::KeyGetPressed(int key){
-    return kbs.IsKeyDown(key) && kbs_prev.IsKeyUp(key);;
+    return kbs.IsKeyDown(key) && kbs_prev.IsKeyUp(key);
 }
 
 InputManager::~InputManager() {

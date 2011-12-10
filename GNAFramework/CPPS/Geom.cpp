@@ -459,6 +459,9 @@ const Matrix Matrix::Identity(iValues);
 const float  Matrix::onesValues[16] = {1.f, 1.f, 1.f, 1.f,  1.f, 1.f, 1.f, 1.f,  1.f, 1.f, 1.f, 1.f,  1.f, 1.f, 1.f, 1.f};
 const Matrix Matrix::Ones(onesValues);
 
+const float  Matrix::zerosValues[16] = {0.f, 0.f, 0.f, 0.f,  0.f, 0.f, 0.f, 0.f,  0.f, 0.f, 0.f, 0.f,  0.f, 0.f, 0.f, 0.f};
+const Matrix Matrix::Zeros(zerosValues);
+
 Matrix Matrix::Lerp(Matrix *matrix1, Matrix *matrix2, float amount){
     Matrix r;
     for(int i = 0; i < 16; i++)
@@ -588,6 +591,54 @@ void Matrix::CreateTranslation(float translationX, float translationY, float tra
     result->cells[14] = translationZ;
 }
 
+
+
+
+void   Matrix::CreateRotationX(float radians, Matrix *result) {
+    *result = Matrix::Identity;
+    result->M22(cos(radians));
+    result->M23(sin(radians));
+    result->M32(-sin(radians));
+    result->M33(cos(radians));
+}
+
+Matrix Matrix::CreateRotationX(float radians){
+    Matrix result;
+    CreateRotationX(radians, &result);
+    return result;
+}
+
+void   Matrix::CreateRotationY(float radians, Matrix *result) {
+    *result = Matrix::Identity;
+    result->M11(cos(radians));
+    result->M13(-sin(radians));
+    result->M31(sin(radians));
+    result->M33(cos(radians));
+}
+
+Matrix Matrix::CreateRotationY(float radians){
+    Matrix result;
+    CreateRotationY(radians, &result);
+    return result;
+}
+
+void   Matrix::CreateRotationZ(float radians, Matrix *result) {
+    *result = Matrix::Identity;
+    result->M11(cos(radians));
+    result->M12(sin(radians));
+    result->M21(-sin(radians));
+    result->M22(cos(radians));
+}
+
+Matrix Matrix::CreateRotationZ(float radians){
+    Matrix result;
+    CreateRotationZ(radians, &result);
+    return result;
+}
+
+
+
+
 Matrix Matrix::Invert() {
     Matrix r; return r;
 }
@@ -629,6 +680,25 @@ Matrix Matrix::operator*(const Matrix & other) const{
                 *p += M(k,j) * other.M(i,k);
         }
     }
+    return r;
+}
+
+Vector4 Matrix::operator*(const Vector4 &vec) const{
+    Vector4 r(
+        vec.X * M11() +  vec.Y * M12() + vec.Z * M13()+ vec.W * M14(), //X
+        vec.X * M21() +  vec.Y * M22() + vec.Z * M23()+ vec.W * M24(), //Y
+        vec.X * M31() +  vec.Y * M32() + vec.Z * M33()+ vec.W * M34(), //Z
+        vec.X * M41() +  vec.Y * M42() + vec.Z * M43()+ vec.W * M44()  //W
+    );
+    return r;
+}
+
+Vector3 Matrix::operator*(const Vector3 &vec) const{
+    Vector3 r(
+        vec.X * M11() +  vec.Y * M12() + vec.Z * M13() + M14(), //X
+        vec.X * M21() +  vec.Y * M22() + vec.Z * M23() + M24(), //Y
+        vec.X * M31() +  vec.Y * M32() + vec.Z * M33() + M34() //Z
+    );
     return r;
 }
 

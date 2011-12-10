@@ -206,6 +206,9 @@ namespace GNAFramework {
         { X /= other.X; Y /= other.Y;  return this; }
         Vector2 *operator/=(const float  & scalar)
         { X /= scalar; Y /= scalar; return this; }
+        
+        bool     operator==(const Vector2 & other) const
+        { return (X == other.X) && (Y == other.Y); }
     };
 
     struct Vector3 {
@@ -284,6 +287,9 @@ namespace GNAFramework {
         { X /= other.X; Y /= other.Y; Z /= other.Z; return this; }
         Vector3 *operator/=(const float  & scalar)
         { X /= scalar; Y /= scalar; Z /= scalar; return this; }
+        
+        bool     operator==(const Vector3 & other) const
+        { return (X == other.X) && (Y == other.Y) && (Z == other.Z); }
         
         void print() const { printf("<%f, %f, %f>", X, Y, Z); }
     
@@ -367,6 +373,7 @@ namespace GNAFramework {
     public:
         const static Matrix Identity;
         const static Matrix Ones;
+        const static Matrix Zeros;
         
         static Matrix Lerp(Matrix *matrix1, Matrix *matrix2, float amount);
         static Matrix CreateLookAt(Vector3 cameraPosition, Vector3 cameraTarget, Vector3 cameraUpVector);
@@ -405,6 +412,16 @@ namespace GNAFramework {
         static void   CreateTranslation(Vector3 translation, Matrix *result);
         static Matrix CreateTranslation(float translationX, float translationY, float translationZ);
         static void   CreateTranslation(float translationX, float translationY, float translationZ, Matrix *result);
+        
+        static void   CreateRotationX(float radians, Matrix *result);
+        static Matrix CreateRotationX(float radians);
+        
+        static void   CreateRotationY(float radians, Matrix *result);
+        static Matrix CreateRotationY(float radians);
+        
+        static void   CreateRotationZ(float radians, Matrix *result);
+        static Matrix CreateRotationZ(float radians);
+        
         
         static Matrix Invert();
         
@@ -477,7 +494,7 @@ namespace GNAFramework {
          */
         inline float *M_ptr(int i, int j) { return cells + (4*j + i); }
         
-        inline void M(int i, int j, float value){ cells[i + 4*j] = value; }
+        inline void M(int i, int j, float value){ cells[4*j + i] = value; }
         
         void values(double *arr) {
             for(int i = 0; i < 16; i++) {
@@ -489,8 +506,10 @@ namespace GNAFramework {
         bool operator==(const Matrix & other) const;
         bool operator!=(const Matrix & other) const;
         
-        Matrix operator*(const Matrix & other) const;
-        Matrix operator*(const float  & scalar) const;
+        Matrix  operator*(const Matrix  & other ) const;
+        Vector4 operator*(const Vector4 & vec   ) const;
+        Vector3 operator*(const Vector3 & vec   ) const;
+        Matrix  operator*(const float   & scalar) const;
         
         Matrix operator+(const Matrix & other) const;
         Matrix operator-(const Matrix & other) const;
@@ -516,6 +535,7 @@ namespace GNAFramework {
         float cells[16];
         static const float iValues[16];
         static const float onesValues[16];
+        static const float zerosValues[16];
     };
     
     

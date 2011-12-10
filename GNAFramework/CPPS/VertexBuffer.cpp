@@ -33,6 +33,7 @@ void VertexBuffer::SetData(const void* data, int startVertex, int elementCount){
                         elementCount*vertexDeclaration.getVertexStride(),
                         ((char *)data) + startVertex*vertexDeclaration.getVertexStride(), 
                         GL_STATIC_DRAW);
+    GNAglBindBufferARB(GL_ARRAY_BUFFER, 0);
 }
 
 VertexBuffer::~VertexBuffer(){

@@ -4,6 +4,7 @@
 //#include "Effect.h"
 #include "Texture2D.h"
 #include "Geom.h"
+#include "Effect.h"
 
 namespace GNAFramework {
     class Effect;
@@ -18,14 +19,17 @@ namespace GNAFramework {
             void SetValue(const T *value);
             
             EffectParameter();
+            EffectParameter(const EffectParameter& orig);
             
             virtual ~EffectParameter();
         private:
+            EffectParameter(Effect *effect, const char *name);
             
-            EffectParameter(GLint ubicacion, const char *nombre, int *actualTexturePosition);
-            static int texturePosition;
-            int *actualTexturePosition;
+            void activateEffect();
+            void deactivateEffect();
             
+            int texturePosition;
+            Effect *effect;
             char *name;
             GLint location;
     };

@@ -2,106 +2,151 @@
 #include <string.h>
 #include "../Texture2D.h"
 #include "AdaptacionesDeFunciones.h"
+#include <limits.h>
 
 using namespace GNAFramework;
 
-
-int EffectParameter::texturePosition = 0;
-
-GLenum getGLTexturePosition(int pos){
-    switch(pos){
-        case 0 : return GL_TEXTURE0_ARB;
-        case 1 : return GL_TEXTURE1_ARB;
-        case 2 : return GL_TEXTURE2_ARB;
-        case 3 : return GL_TEXTURE3_ARB;
-        case 4 : return GL_TEXTURE4_ARB;
-        case 5 : return GL_TEXTURE5_ARB;
-        case 6 : return GL_TEXTURE6_ARB;
-        case 7 : return GL_TEXTURE7_ARB;
-        case 8 : return GL_TEXTURE8_ARB;
-        case 9 : return GL_TEXTURE9_ARB;
-        case 10: return GL_TEXTURE10_ARB;
-        case 11: return GL_TEXTURE11_ARB;
-        case 12: return GL_TEXTURE12_ARB;
-        case 13: return GL_TEXTURE13_ARB;
-        case 14: return GL_TEXTURE14_ARB;
-        case 15: return GL_TEXTURE15_ARB;
-        case 16: return GL_TEXTURE16_ARB;
-    }
-}
-
-Texture2D *EffectParameter::getTexture(){
+Texture2D *EffectParameter::getTexture() {
     return NULL;
 }
 
-EffectParameter::EffectParameter(GLint ubicacion, const char *nombre, int *actualTexturePosition) {
-    this->location = ubicacion;
-    
-    this->actualTexturePosition = actualTexturePosition;
-    *(this->actualTexturePosition) = -1;
-    
-    this->name = new char[strlen(nombre)];
-    strcpy(this->name, nombre);
+EffectParameter::EffectParameter(Effect *effect, const char *name) {
+    this->name = new char[strlen(name) + 1];
+    strcpy(this->name, name);
+
+
+    this->effect = effect;
+    location = glGetUniformLocationARB(effect->program, name);
+    texturePosition = -1;
 }
 
-EffectParameter::EffectParameter(){
-    this->location= -2;
-    this->name = NULL;
-    actualTexturePosition = NULL;
+EffectParameter::EffectParameter(const EffectParameter& orig) {
+    (*this) = orig;
+    name = new char[strlen(orig.name) + 1];
+    strcpy(name, orig.name);
+}
+
+EffectParameter::EffectParameter() {
+    location = INT_MAX;
+    name = NULL;
+    texturePosition = -1;
+}
+
+void EffectParameter::activateEffect() {
+    if(!effect) 
+        throw InvalidOperationException("This effect parameter is not Initialized.");
+    
+    if(!effect->begin) {
+        if(Effect::effectStarted)
+            throw InvalidOperationException("Cannot use a Parameter while other effect has began.");
+        
+        glUseProgramObjectARB(effect->program);
+    }
+}
+
+void EffectParameter::deactivateEffect() {
+    if(!effect) 
+        throw InvalidOperationException("This effect parameter is not Initialized.");
+    
+    if(!effect->begin) {
+        if(Effect::effectStarted)
+            throw InvalidOperationException("Cannot use a Parameter while other effect has began.");
+        
+        glUseProgramObjectARB(0);
+    }
 }
 
 
 EffectParameter::~EffectParameter() {
+    delete name;
 }
 
+
+
+
 namespace GNAFramework {
-    
+
     template <>
-    void EffectParameter::SetValue<Texture2D>(const Texture2D *value){
-        //printf("Look texture %d on %d effect:%s\n", *actualTexturePosition, actualTexturePosition, name);fflush(stdout);
-        if(*actualTexturePosition < 0) {
-           *actualTexturePosition = EffectParameter::texturePosition++;
+    void EffectParameter::SetValue<Texture2D>(const Texture2D *value) {
+        activateEffect();
+        
+        if (texturePosition < 0) {
+            int i;
+            for (i = 0; i < effect->texPosSize; i++) {
+                if (effect->texPos[i].parameter == location) break;
+            }
+            
+            if (i == effect->texPosSize) {
+                if (effect->texPosSize >= 17) {
+                    throw InvalidOperationException("Texture limit per effect reached: 17.");
+                }
+
+                texturePosition = effect->texPosSize++;
+                effect->texPos[texturePosition].parameter = location;
+            } else {
+                texturePosition = i;
+            }
         }
+
+        effect->texPos[texturePosition].texture = value;
         
-        glActiveTextureARB(getGLTexturePosition(*actualTexturePosition));
-        glBindTexture(GL_TEXTURE_2D,value->Pointer());
-        
-        //printf("Set texture %d on %d effect:%s\n", *actualTexturePosition, actualTexturePosition, name);fflush(stdout);
-        glUniform1iARB(location, *actualTexturePosition);
+        deactivateEffect();
     }
-    
+
     template <>
-    void EffectParameter::SetValue<float>(const float *value){
+    void EffectParameter::SetValue<int>(const int *value) {
+        activateEffect();
+        glUniform1iARB(location, *value);
+        deactivateEffect();
+    }
+
+    template <>
+    void EffectParameter::SetValue<float>(const float *value) {
+        activateEffect();
         glUniform1fARB(location, *value);
+        deactivateEffect();
     }
-    
+
     template <>
-    void EffectParameter::SetValue<Vector2>(const Vector2 *value){
+    void EffectParameter::SetValue<Vector2>(const Vector2 *value) {
+        activateEffect();
         glUniform2fARB(location, value->X, value->Y);
+        deactivateEffect();
     }
-    
+
     template <>
-    void EffectParameter::SetValue<Vector3>(const Vector3 *value){
+    void EffectParameter::SetValue<Vector3>(const Vector3 *value) {
+        activateEffect();
         glUniform3fARB(location, value->X, value->Y, value->Z);
+        deactivateEffect();
     }
-    
+
     template <>
-    void EffectParameter::SetValue<Vector4>(const Vector4 *value){
+    void EffectParameter::SetValue<Vector4>(const Vector4 *value) {
+        activateEffect();
         glUniform4fARB(location, value->X, value->Y, value->Z, value->W);
+        deactivateEffect();
     }
-    
+
     template <>
-    void EffectParameter::SetValue<Matrix>(const Matrix *value){
-        fflush(stdout);
+    void EffectParameter::SetValue<Color>(const Color *value) {
+        Vector4 vec = value->toVector4();
+        SetValue<Vector4 > (&vec);
+    }
+
+    template <>
+    void EffectParameter::SetValue<Matrix>(const Matrix *value) {
+        activateEffect();
         float values[16] = {
             value->M11(), value->M12(), value->M13(), value->M14(),
-            value->M21(), value->M22(), value->M23(), value->M24(), 
-            value->M31(), value->M32(), value->M33(), value->M34(), 
-            value->M41(), value->M42(), value->M43(), value->M44(), 
+            value->M21(), value->M22(), value->M23(), value->M24(),
+            value->M31(), value->M32(), value->M33(), value->M34(),
+            value->M41(), value->M42(), value->M43(), value->M44(),
         };
-        
+
         glUniformMatrix4fvARB(location, 1, (GLboolean) true, values);
+        deactivateEffect();
     }
-    
+
 }
 

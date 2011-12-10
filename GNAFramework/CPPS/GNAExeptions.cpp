@@ -13,13 +13,13 @@ namespace GNAFramework {
     }
 
     GNAException::GNAException(const char* message) {
-        this->message = new char[strlen(message)];
+        this->message = new char[strlen(message)+1];
         strcpy(this->message, message);
         this->innerException = NULL;
     }
 
     GNAException::GNAException(const char* message, GNAException* innerException) {
-        this->message = new char[strlen(message)];
+        this->message = new char[strlen(message)+1];
         strcpy(this->message, message);
         this->innerException = innerException;
     }
@@ -55,19 +55,20 @@ namespace GNAFramework {
         } else {
             sprintf(buffer, "%s {Message: \"%s\"}", getExceptionName(), Message());
         }
-        result = new char[strlen(buffer)];
+        result = new char[strlen(buffer)+1];
         strcpy(result, buffer);
 
         return result;
     }
 
     char *GNAException::ExceptionTrace() const {
-        char buffer[10240];
         char *result, *aux;
+        char buffer[1024];
         const GNAException *e = InnerException();
         
-        strcpy(buffer, aux = toString());
-        free(aux);
+        aux = toString();
+        strcpy(buffer, aux);
+        delete [] aux;
 
         while (e != NULL) {
             strcat(buffer, "\n");
@@ -78,7 +79,7 @@ namespace GNAFramework {
 
         strcat(buffer, "\n");
 
-        result = new char[strlen(buffer)];
+        result = new char[strlen(buffer)+1];
         strcpy(result, buffer);
 
         return result;

@@ -12,7 +12,9 @@
          while the game run. -->
     <debuger verbose="false" />
     
-    
+    <graphics>
+        <shaderheightmap active="true" />
+    </graphics>
     
 </conf>
 

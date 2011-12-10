@@ -30,10 +30,10 @@ IndexBuffer::IndexBuffer (
 
 int IndexBuffer::elementSize(IndexElementSize ies){
     switch(ies){
-        case(SixteenBits):
+        case(ThirtyTwoBits):
             return sizeof(GLuint);
             break;
-        case(ThirtyTwoBits):
+        case(SixteenBits):
             return sizeof(GLushort);
             break;
         default: throw new ArgumentException("IndexElementSize no reconocido.");

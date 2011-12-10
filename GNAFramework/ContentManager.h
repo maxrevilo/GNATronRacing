@@ -17,6 +17,7 @@ namespace GNAFramework {
     public:
         char * RootDirectory;
         bool loadInstance;
+        
 
         ContentManager(char * RootDirectory);
 

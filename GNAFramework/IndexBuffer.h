@@ -15,8 +15,8 @@ namespace GNAFramework {
     public:
         
         enum IndexElementSize {
-            SixteenBits,
-            ThirtyTwoBits
+            ThirtyTwoBits,
+            SixteenBits
         };
         
         IndexBuffer ();

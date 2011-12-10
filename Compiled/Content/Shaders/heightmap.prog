@@ -1,0 +1,61 @@
+//Varyings: 
+//Coordenadas U,V del objeto:
+varying vec2 Texcoord;
+//Direccion de la camara (en coordenadas Globales): 
+//varying vec3 camDir;
+//Normal:
+//varying vec3 normal;
+
+uniform float elevation;
+
+//Vertex Shader:
+#ifdef VERTEX
+uniform sampler2D heightMap;
+//uniform mat4 rMatView;
+uniform mat4 rMatWorldViewProjection;
+
+//Matriz de transformacion del mundo del Objeto (Sin la transformacion de la camara):
+//uniform mat4 rMatWorld;
+//Posicion de la camara en coordenadas globales:
+//uniform vec3 rCamPos;
+   
+void main( void )
+{
+    Texcoord     = gl_Vertex.xy;
+    gl_Position = rMatWorldViewProjection * vec4(gl_Vertex.x, gl_Vertex.y, texture2D( heightMap, Texcoord ).r * elevation, 1.0);
+   
+   
+   //normal      = gl_Normal.xyz; //rMatWorld * 
+   
+   //Objeto en coordenadas Globales:
+   //vec4 objPos = rMatWorld * gl_Vertex;
+   //camDir      = objPos.xyz - rCamPos;
+}
+
+#endif
+
+//Fragment Shader:
+#ifdef FRAGMENT
+
+// Potencia especular:
+//uniform float specPow;
+
+//Textura de color del objeto:
+uniform sampler2D colorMap;
+
+void main( void )
+{
+   //Normal en coordenadas Locales:
+   //vec3 nNormal      = normalize(normal);
+   //vec3 nCamDir      = normalize(camDir);
+   //vec3 reflectedEye = reflect(nCamDir, nNormal);
+   
+   //Color del objeto en este pixel:
+   vec4  fvBaseColor      = texture2DLod( colorMap, Texcoord, 0);
+   fvBaseColor.a = 1.0;
+   
+   gl_FragColor = fvBaseColor;
+}
+
+#endif
+

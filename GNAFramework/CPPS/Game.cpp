@@ -9,9 +9,12 @@ using namespace GNAFramework;
 void Game::catchGNAException(GNAException *e) const throw(GNAException){
     char *str;
     perror(str = e->ExceptionTrace());
-    delete [] str;
+    printf(str);
     fflush(stderr);
-
+    fflush(stdout);
+    
+    delete [] str;
+    
     throw e;
 }
 
@@ -54,7 +57,7 @@ void Game::Start() {
 
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-        graphicDevice = new GraphicDevice(800, 600, false);
+        graphicDevice = new GraphicDevice(1280, 800, false);
 
         Mouse::setMouseVisibility(false);
 

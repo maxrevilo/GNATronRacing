@@ -10,12 +10,12 @@
 #include "../GNAFramework/VertexBuffer.h"
 #include "../GNAFramework/VertexDeclaration.h"
 #include "Camera.h"
+#include "../GLM/Model3D.h"
 
 class Scenario : public GameActor {
 public:
     int width, height;
     Camera *camera;
-    
     
     Scenario(Game* game, Camera *camera);
     
@@ -27,26 +27,19 @@ public:
     
     virtual ~Scenario();
 private:
-    VertexDeclaration vd;
-    IndexBuffer       ibo512;
-    VertexBuffer      vbo512;
+    Model3D *skyMap;
+    EffectParameter skyMapWVPMat;
     
-    
-    //HeightMap array:
-    struct Mesh{
-        Vector3 position, dimension;
-        Texture2D *heightMap, *colorMap, *normalMap;
-        
-        Mesh(); Mesh(TiXmlNode *node, ContentManager *cm);
-        void Draw(Camera* camera, Matrix world, DrawOptions option);
-        ~Mesh();
-    } *meshes;
-    int meshes_leght;
+    Model3D *model;
+    EffectParameter modelWVPMat[6];
     
     
     struct Floor {
-        Texture2D *texture;
         Effect    *effect;
+        
+        VertexDeclaration vd;
+        IndexBuffer       ibo;
+        VertexBuffer      vbo;
         
         EffectParameter Ep_WVP;
         EffectParameter Ep_W;
@@ -54,8 +47,30 @@ private:
         
         Floor() {};
         Floor(Game* game);
-        void Draw(Camera* camera, Matrix world, DrawOptions option);
+        void Draw(Camera* camera, Matrix world, GraphicDevice *gd, DrawOptions option);
+        
     } floor;
+    
+    //HeightMap array:
+    struct Mesh{
+    public:
+        static void initializeBuffers(GraphicDevice *gd);
+        
+        Mesh(); Mesh(TiXmlNode *node, ContentManager *cm);
+        void Draw(Camera* camera, GraphicDevice *gd, DrawOptions option);
+        ~Mesh();
+    private:
+        static VertexDeclaration vd;
+        static IndexBuffer       ibo512;
+        static VertexBuffer      Svbo512;
+        
+        VertexBuffer             vbo512;
+        
+        Effect    *effect;
+        Vector3    position, dimension;
+        Texture2D *heightMap, *colorMap, *normalMap;
+    } *meshes;
+    int meshes_length;
     
 };
 

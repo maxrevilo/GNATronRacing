@@ -1,38 +1,54 @@
 <?xml version="1.0" ?>
 <level name="Nivel 1" title="Training">
     <!-- Units expressed on 1 = 2 lightCycles -->
-    <scenario width="10" height="20">
+    <scenario width="12" height="20">
         
-        <!--<meshes lenght="2">
+        <meshes length="2">
             <mesh width="1.0" height="1.0">
                 <position  x="2.0" y="2.0"           />
-                <dimension x="1.0" y="1.0" z="0.1"   />
+                <dimension x="1.0" y="1.0" z="0.5"   />
                 <!-- Paths relative to Content/ folder -->
                 <heightmap path="Heightmaps/hm1.bmp" />
                 <colormap  path="Heightmaps/cm1.bmp" />
             </mesh>
+            
             <mesh>
                 <position  x="0.0" y="10.0"          />
-                <dimension x="0.5" y="10.0" z="0.1"  />
-                <heightmap path="Heightmaps/hm1.bmp" />
-                <colormap  path="Heightmaps/cm1.bmp" />
+                <dimension x="10.0" y="0.5" z="0.3"  />
+                <heightmap path="Heightmaps/hm3.bmp" />
+                <colormap  path="Heightmaps/hm3.bmp" />
             </mesh>
-        </meshes> -->
+        </meshes> 
         
     </scenario>
     
     
     <exit_position x="5.0" y="19.5" />
     
-    <player>
-        <position x="2.0" y="2.0" />
-        <color    r="255" g="255" b="255" />
-        
+    <player strength="1.0">
+        <position  x="2.0" y="2.0" z="0.0" />
+        <direction x="1.0" y="1.0" z="0.0" />
+        <color     x="1.0" y="1.0" z="1.0" />
     </player>
     
-    <enemys length="2">
+    <!--Maximun 16 enemies -->
+    <enemys>
         <enemy>
+            <position  x="5.0" y="5.0" z="0.0" />
+            <direction x="1.0" y="0.0" z="0.0" />
+            <color     x="1.0" y="0.64" z="1.0"/>
             
+            <patrol length="3">
+                <p x="7.0" y="0.0"/>
+                <p x="5.0" y="1.0"/>
+                <p x="0.0" y="5.0"/>
+            </patrol>
+        </enemy>
+        
+        <enemy strength="1.0">
+            <position  x="10.0" y="9.0" z="0.0" />
+            <direction x="0.0" y="1.0" z="0.0" />
+            <color     x="1.0" y="0.4" z="1.0" />
         </enemy>
     </enemys>
     

@@ -14,7 +14,7 @@ GameWindow::GameWindow(int width, int height, char *tittle, char *icon_Path) {
         printf("SDL could not load the Icon image: %s\n", SDL_GetError());
     }
     
-    screen = SDL_SetVideoMode(width, height, 0, SDL_OPENGL);
+    screen = SDL_SetVideoMode(width, height, 0, SDL_OPENGL | SDL_FULLSCREEN);
     if(!screen){
         printf("Unable to initialize OpenGL: %s\n", SDL_GetError());
         exit(1);
@@ -32,7 +32,7 @@ void GameWindow::SetTittle(char* tittle) {
     if(this->tittle != NULL)
         delete this->tittle;
 
-    this->tittle = (char *) malloc((strlen(tittle) + 1) * sizeof(char));
+    this->tittle = new char[strlen(tittle) + 1];
     strcpy(this->tittle, tittle);
 
     SDL_WM_SetCaption(this->tittle, NULL);

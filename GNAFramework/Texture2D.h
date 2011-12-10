@@ -20,7 +20,7 @@ namespace GNAFramework {
         int getHeight() const;
         RectangleF getBounds() const;
 
-
+        void UseMipMap(bool mipMap);
 
         Texture2D(GraphicDevice *graphicsDevice, int width, int height);
         Texture2D(GraphicDevice *graphicsDevice, int width, int height, bool mipMap, SurfaceFormat format);

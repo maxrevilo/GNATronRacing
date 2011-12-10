@@ -1,13 +1,29 @@
 #include "../DataManager.h"
 #include "../../tinyxml/tinyxml.h"
 #include "../DebugManager.h"
+#include "../../GNAFramework/MathHelper.h"
 
 #define MAX_LEVELS 20
 
 char ** DataManager::levels_paths        = NULL;
 int     DataManager::levels_paths_lenght = 0;
 
-float DataManager::unit_size             = 250.f;
+bool    DataManager::useShaderHeightmap  = false;
+
+
+float DataManager::unit_size             = 1000.f;
+
+float DataManager::aceleration           = DataManager::unit_size / 10.f;
+float DataManager::turboAceleration      = DataManager::unit_size / 2.f;
+float DataManager::fuelRegeneration      = 20.f; //20 of fuel per second
+float DataManager::fuelConsumption       = 30.f;
+float DataManager::speed                 = DataManager::unit_size / 2.f;
+float DataManager::turboSpeed            = DataManager::unit_size;
+float DataManager::turnRate              = 25.f / 90.f * Pi; //10 degres per second
+float DataManager::maxTurnRate           = 25.f / 90.f * Pi; //25 degres per second
+float DataManager::turnSlowRate          = 25.f / 90.f * Pi;
+
+Vector3 DataManager::LightPos            = Vector3(6000.f, 10000.f, 10000.f);
 
 void DataManager::loadGameDescription(const char *path) {
     TiXmlDocument doc(path);
@@ -22,6 +38,18 @@ void DataManager::loadGameDescription(const char *path) {
         if(debuger != NULL) {
             const char *verbose = debuger->ToElement()->Attribute("verbose");
             if(verbose != NULL) DebugManager::verbose = strcmp("true", verbose) == 0;
+        }
+        // </editor-fold>
+        
+        
+        // <editor-fold defaultstate="collapsed" desc="Load Graphic Options">
+        TiXmlNode *graphics = base->FirstChild("graphics");
+        if(graphics != NULL) {
+            TiXmlNode *shaderheightmap = graphics->FirstChild("shaderheightmap");
+            if(shaderheightmap != NULL) {
+                const char *active = shaderheightmap->ToElement()->Attribute("active");
+                if(active != NULL) useShaderHeightmap = strcmp("true", active) == 0;
+            }
         }
         // </editor-fold>
 
@@ -42,7 +70,7 @@ void DataManager::loadGameDescription(const char *path) {
             if(e != NULL) {
                 //Asign the path on levels_paths[levels_paths_lenght]:
                 const char * path = e->Attribute("path");
-                levels_paths[levels_paths_lenght] = new char[strlen(path)];
+                levels_paths[levels_paths_lenght] = new char[strlen(path)+1];
                 strcpy(levels_paths[levels_paths_lenght], path);
                 levels_paths_lenght++;
             }
@@ -53,3 +81,4 @@ void DataManager::loadGameDescription(const char *path) {
         throw new ContentLoadException((char *)"Game Description file couldn't be loaded.");
     }
 }
+

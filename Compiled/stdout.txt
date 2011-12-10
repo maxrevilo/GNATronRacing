@@ -1,0 +1,22 @@
+Name 'Sphere_1' v: 323,  i: 1584
+Name 'default' v: 0,  i: 0
+Name 'Brillos' v: 40,  i: 60
+Name 'Pista' v: 4,  i: 6
+Name 'MarcaAzul' v: 160,  i: 240
+Name 'Estadio' v: 1362,  i: 5292
+Name 'Marcador' v: 164,  i: 294
+Name 'Luces' v: 240,  i: 360
+Name 'default' v: 0,  i: 0
+Name 'S' v: 4,  i: 6
+Name 'F' v: 10,  i: 24
+Name 'default' v: 0,  i: 0
+Name 'Driver' v: 5727,  i: 23352
+Name 'Helmet' v: 753,  i: 3942
+Name 'Batton' v: 98,  i: 288
+Name 'Disc' v: 192,  i: 864
+Name 'Body' v: 12182,  i: 29778
+Name 'Tire' v: 841,  i: 2904
+Name 'Engine' v: 364,  i: 1224
+Name 'Cristal' v: 108,  i: 540
+Name 'default' v: 0,  i: 0
+Game ended

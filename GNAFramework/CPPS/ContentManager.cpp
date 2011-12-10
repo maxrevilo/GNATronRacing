@@ -15,7 +15,7 @@
 
 
 namespace GNAFramework {
-
+    
     ContentManager::ContentManager(char * RootDirectory) {
         this->RootDirectory = RootDirectory;
 
@@ -32,14 +32,14 @@ namespace GNAFramework {
         if (RootDirectory != NULL) {
 
             int length = strlen(path) + strlen(RootDirectory) + 1;
-            fullPath = (char *) malloc(length * sizeof (char));
+            fullPath = new char[length];
 
             strcpy(fullPath, RootDirectory);
             strcat(fullPath, path);
 
         } else {
             int length = strlen(path) + 1;
-            fullPath = (char *) malloc(length * sizeof (char));
+            fullPath = new char[length];
 
             strcpy(fullPath, path);
         }
@@ -64,7 +64,7 @@ namespace GNAFramework {
         
         if ((surface = SDL_LoadBMP(fullPath))) {
 
-            free(fullPath);
+            delete [] fullPath;
 
             // get the number of channels in the SDL surface
             bpp = surface->format->BytesPerPixel;
@@ -92,14 +92,14 @@ namespace GNAFramework {
 
             SDL_FreeSurface(surface);
 
-            node = texture2D.next;
-            texture2D.next = (CntNode *) malloc(sizeof (CntNode));
+            /*node = texture2D.next;
+            texture2D.next = new CntNode();
             texture2D.next->content = (void *) result;
-            texture2D.next->next = node;
+            texture2D.next->next = node;*/
 
             return result;
         } else {
-            free(fullPath);
+            delete [] fullPath;
             ContentLoadException *ei = new ContentLoadException(SDL_GetError());
             throw new ContentLoadException((char *)"No se pudo cargar la Texture2D", ei);
         }
@@ -207,10 +207,14 @@ namespace GNAFramework {
             
             return effect;
         } else {
-            if(effect)   delete effect;
-            if(memblock) delete[] memblock;
+            char buf[128];
+            char *msg;
+            sprintf(buf,"No se pudo cargar el archivo de Efecto en \"%s\"", fullPath);
+            msg = new char[strlen(buf)+1];
+            strcpy(msg, buf);
+            
             free(fullPath);
-            throw new ContentLoadException((char *)"No se pudo cargar el archivo de Efecto");
+            throw new ContentLoadException(msg);
         }
     }
 

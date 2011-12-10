@@ -210,8 +210,10 @@ void GraphicDevice::setVertexBuffer(VertexBuffer vertexBuffer){
             case VertexElement::TextureCoordinate:
                 glTexCoordPointer(size, type, stride, ptr);
                 break;
-        };
-    };
+        }
+    }
+    
+    GNAglBindBufferARB(GL_ARRAY_BUFFER, 0);
 }
 
 
@@ -224,12 +226,14 @@ void GraphicDevice::DrawIndexedPrimitives (
                          //int startIndex,
                          int primitiveCount
                         ){
+    GNAglBindBufferARB(GL_ARRAY_BUFFER, 0);
     
     GNAglBindBufferARB(GL_ARRAY_BUFFER, vertexBuffer.pointer);
     GNAglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER, indexBuffer.pointer);
     
+    
     GLenum mask;
-    if(indexBuffer.indexElementSize == IndexBuffer::SixteenBits) mask = GL_UNSIGNED_INT;
+    if(indexBuffer.indexElementSize == IndexBuffer::ThirtyTwoBits) mask = GL_UNSIGNED_INT;
     else mask = GL_UNSIGNED_SHORT;
     
     glDrawRangeElements((GLenum) primitiveType, 
@@ -238,6 +242,9 @@ void GraphicDevice::DrawIndexedPrimitives (
                         primitiveCount,
                         mask,
                         (const GLvoid *)0);
+    
+    GNAglBindBufferARB(GL_ARRAY_BUFFER, 0);
+    GNAglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 

@@ -10,11 +10,13 @@ COMPILE    = $(CC) $(CFLAGS) -c
 
 GNA_FW     = GNAFramework/CPPS/*.cpp 
 
+GLM        = GLM/*.cpp 
+
 TINY_XML   = tinyxml/*.cpp 
 
 GAME       = Managers/CPP/*.cpp GameActors/CPP/*.cpp *.cpp
 
-TARGETS    = $(GNA_FW) $(TINY_XML) $(GAME)
+TARGETS    = $(GNA_FW) $(GLM) $(TINY_XML) $(GAME)
 
 OBJFILES  := $(patsubst %.cpp,%.o,$(wildcard $(TARGETS)))
 
@@ -30,4 +32,4 @@ clean:
 	rm -f Compiled/juego
 
 clean_game:
-	rm -f Logica/CPPS/*.o Graficas/*.o *.o
+	rm -f GLM/*.o GameActors/CPP/*.o Managers/CPP/*.o *.o

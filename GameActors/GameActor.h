@@ -20,6 +20,8 @@ public:
         this->game = game;
     }
     
+    virtual void Initialize(TiXmlNode *node) = 0;
+    
     virtual void Draw(GameTime gameTime, DrawOptions option) = 0;
     
     virtual void Update(GameTime gameTime) = 0;

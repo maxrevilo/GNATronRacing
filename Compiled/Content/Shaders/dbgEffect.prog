@@ -1,0 +1,23 @@
+//uniform mat4 rMatView;
+uniform mat4 rMatWorldViewProjection;
+
+//Color objeto:
+uniform vec4 Color;
+
+#ifdef VERTEX   
+void main( void )
+{
+   gl_Position = rMatWorldViewProjection * gl_Vertex;
+}
+
+#endif
+
+//Fragment Shader:
+#ifdef FRAGMENT
+void main( void )
+{
+   gl_FragColor = Color;
+}
+
+#endif
+
