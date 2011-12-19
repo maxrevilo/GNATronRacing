@@ -8,13 +8,13 @@
 #include "../GNAFramework/Game.h"
 #include "Camera.h"
 
-#define MAXTRAIL 240
+#define MAXTRAIL 600
 
 class Trail {
 public:
     Trail(Game *game, Vector4 *color);
     
-    void Update(Matrix world, float length);
+    void Update(Matrix world);
     
     void Draw(Camera *camera);
     
@@ -28,9 +28,11 @@ private:
     Game *game;
     Vector4 *color;
     
-    int lastTrail, firstTrail;
-    Matrix world[MAXTRAIL];
-    float  lenghts[MAXTRAIL];
+    int lastTrail;
+    bool ini;
+    Matrix lastPosWorld;
+    Vector3 upTrailPos[MAXTRAIL];
+    Vector3 loTrailPos[MAXTRAIL];
 };
 
 #endif	/* TRAIL_H */

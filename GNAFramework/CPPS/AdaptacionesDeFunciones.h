@@ -6,6 +6,10 @@
 
 
 
+extern bool ShadersSuport;
+extern bool BuffersSuport;
+
+
 //////////////////////////////////// SHADERS ///////////////////////////////////
 
 extern bool setupExtensions(char *error);
@@ -42,25 +46,33 @@ extern bool setupExtensions(char *error);
   extern PFNGLUNIFORMMATRIX4FVARBPROC        glUniformMatrix4fvARB;
 #endif
 
-
-
-///////////////////////////// BLENDING /////////////////////////////////////////
-
-#if defined(WIN32)
-extern PFNGLBLENDEQUATIONPROC glBlendEquation;
-#endif
-
-
-
-
 /////////////////////////////////// BUFFERS ////////////////////////////////////
 #define GL_ARRAY_BUFFER_ARB 0x8892
 #define GL_STATIC_DRAW_ARB  0x88E4
 
-extern PFNGLGENBUFFERSARBPROC    GNAglGenBuffersARB;
-extern PFNGLBINDBUFFERARBPROC    GNAglBindBufferARB;
-extern PFNGLBUFFERDATAARBPROC    GNAglBufferDataARB;
-extern PFNGLDELETEBUFFERSARBPROC GNAglDeleteBuffersARB;
+extern PFNGLGENBUFFERSARBPROC    glGenBuffersARB;
+extern PFNGLBINDBUFFERARBPROC    glBindBufferARB;
+extern PFNGLBUFFERDATAARBPROC    glBufferDataARB;
+extern PFNGLDELETEBUFFERSARBPROC glDeleteBuffersARB;
+
+#if defined(__WIN32__)
+// Framebuffer object
+extern PFNGLGENFRAMEBUFFERSEXTPROC                     glGenFramebuffersEXT;             // FBO name generation procedure
+extern PFNGLDELETEFRAMEBUFFERSEXTPROC                  glDeleteFramebuffersEXT;             // FBO deletion procedure
+extern PFNGLBINDFRAMEBUFFEREXTPROC                     glBindFramebufferEXT;             // FBO bind procedure
+extern PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC              glCheckFramebufferStatusEXT;             // FBO completeness test procedure
+extern PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXTPROC glGetFramebufferAttachmentParameterivEXT; // return various FBO parameters
+extern PFNGLGENERATEMIPMAPEXTPROC                      glGenerateMipmapEXT;             // FBO automatic mipmap generation procedure
+extern PFNGLFRAMEBUFFERTEXTURE2DEXTPROC                glFramebufferTexture2DEXT;             // FBO texdture attachement procedure
+extern PFNGLFRAMEBUFFERRENDERBUFFEREXTPROC             glFramebufferRenderbufferEXT;             // FBO renderbuffer attachement procedure
+// Renderbuffer object
+extern PFNGLGENRENDERBUFFERSEXTPROC                    glGenRenderbuffersEXT;             // renderbuffer generation procedure
+extern PFNGLDELETERENDERBUFFERSEXTPROC                 glDeleteRenderbuffersEXT;                 // renderbuffer deletion procedure
+extern PFNGLBINDRENDERBUFFEREXTPROC                    glBindRenderbufferEXT;                    // renderbuffer bind procedure
+extern PFNGLRENDERBUFFERSTORAGEEXTPROC                 glRenderbufferStorageEXT;                 // renderbuffer memory allocation procedure
+extern PFNGLGETRENDERBUFFERPARAMETERIVEXTPROC          glGetRenderbufferParameterivEXT;          // return various renderbuffer parameters
+extern PFNGLISRENDERBUFFEREXTPROC                      glIsRenderbufferEXT;                      // determine renderbuffer object type
+#endif
 
 
 
@@ -68,6 +80,7 @@ extern PFNGLDELETEBUFFERSARBPROC GNAglDeleteBuffersARB;
 /////////////////////////////////// DRAWING ////////////////////////////////////
 #if defined(__WIN32__)
   extern PFNGLDRAWRANGEELEMENTSPROC glDrawRangeElements;
+  extern PFNGLBLENDEQUATIONPROC     glBlendEquation;
 #endif
 
 

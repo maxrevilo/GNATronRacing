@@ -10,7 +10,6 @@
 
 
 namespace GNAFramework {
-    // <editor-fold defaultstate="collapsed" desc="Texture2D:">
 
     void Texture2D::init(GraphicDevice *graphicsDevice, int width, int height, bool mipMap, SurfaceFormat format){
         this->height = height;
@@ -55,6 +54,32 @@ namespace GNAFramework {
     Texture2D::Texture2D(GraphicDevice *graphicsDevice, int width, int height, bool mipMap, SurfaceFormat format) {
         init(graphicsDevice, width, height, mipMap, format);
     }
+    
+    static GLuint addressModes[3] = {GL_REPEAT, GL_CLAMP, 0};
+    
+    
+    void Texture2D::setSamplerAddressUV(TextureAddressMode addressMode) {
+        glActiveTextureARB(GL_TEXTURE0_ARB);
+        glBindTexture(GL_TEXTURE_2D, pointer);
+        
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, addressModes[addressMode] );
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, addressModes[addressMode] );
+    }
+    
+    void Texture2D::setSamplerAddressU(TextureAddressMode addressMode) {
+        glActiveTextureARB(GL_TEXTURE0_ARB);
+        glBindTexture(GL_TEXTURE_2D, pointer);
+        
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, addressModes[addressMode] );
+    }
+    
+    void Texture2D::setSamplerAddressV(TextureAddressMode addressMode) {
+        glActiveTextureARB(GL_TEXTURE0_ARB);
+        glBindTexture(GL_TEXTURE_2D, pointer);
+        
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, addressModes[addressMode] );
+    }
+    
     
     void Texture2D::UseMipMap(bool mipMap) {
             glActiveTextureARB(GL_TEXTURE0_ARB);
@@ -287,7 +312,5 @@ namespace GNAFramework {
     Texture2D::~Texture2D() {
         glDeleteTextures(1, &pointer);
     }
-
-    // </editor-fold>
 
 }

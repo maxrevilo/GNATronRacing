@@ -78,7 +78,7 @@ void main( void )
    //if(dot(nNormal, nLuz0Dir) <= 0.0) R0DotC = 0.0;
    
    vec4  Diffuse      = texture2D( diffMap, Texcoord );
-   vec4  Emissive     = texture2DLod( emssMap, Texcoord, 0 );
+   vec4  Emissive     = texture2D( emssMap, Texcoord );
    
    vec4  fvTotalAmbient   = Ambient * Diffuse + Emissive * Color; 
    vec4  fvTotalDiffuse   = (rPLuz0Col * NDotLP0) * Diffuse; 

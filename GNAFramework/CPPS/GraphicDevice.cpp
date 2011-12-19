@@ -1,12 +1,12 @@
 #include "../GraphicDevice.h"
 #include "AdaptacionesDeFunciones.h"
+#include "../Texture2D.h"
+#include "../RenderTarget2D.h"
 #if defined(__WIN32__)
     #include <windows.h>
 #endif
 
 using namespace GNAFramework;
-
-
 
 
 GraphicDevice::GraphicDevice(int width, int height, bool fullScreen) {
@@ -27,21 +27,6 @@ GraphicDevice::GraphicDevice(int width, int height, bool fullScreen) {
     gameWindow = new GameWindow(width, height, (char *) "Game", (char *) "GameIcon.bmp");
     
     
-    #ifdef WIN32
-    glBlendEquation = (PFNGLBLENDEQUATIONPROC) SDL_GL_GetProcAddress("glBlendEquation");
-    if (glBlendEquation == NULL) {
-        fprintf(stderr, "BlendEquation Support not present.\n");
-        exit(1);
-    }
-    glDrawRangeElements = (PFNGLDRAWRANGEELEMENTSPROC) SDL_GL_GetProcAddress("glDrawRangeElements");
-    #endif
-    
-    //Funciones de buffers:
-    GNAglBindBufferARB = (PFNGLBINDBUFFERARBPROC) SDL_GL_GetProcAddress("glBindBufferARB");
-    GNAglGenBuffersARB = (PFNGLGENBUFFERSARBPROC) SDL_GL_GetProcAddress("glGenBuffersARB");    
-    GNAglBufferDataARB = (PFNGLBUFFERDATAARBPROC) SDL_GL_GetProcAddress("glBufferDataARB");
-    
-    //Funciones de Shaders:
     char errors[128];
     if(!setupExtensions(errors)) {
         #if defined(__WIN32__)
@@ -49,8 +34,13 @@ GraphicDevice::GraphicDevice(int width, int height, bool fullScreen) {
         #else
             perror(errors);
         #endif
-        
     }
+    
+    // <editor-fold defaultstate="collapsed" desc="Setting user FramBuffer">
+    glGenFramebuffersEXT(1, &frameBuffer);
+    renderTarget = NULL;
+    // </editor-fold>
+
     
     glEnableClientState(GL_INDEX_ARRAY);
     glEnableClientState(GL_VERTEX_ARRAY);
@@ -95,8 +85,24 @@ bool GraphicDevice::isFullScreen() {
 }
 
 void GraphicDevice::setFullScreen(bool fullScreen) {
-    perror("GraphicDevice::setFullScreen: No soportado.");
-    exit(1);
+    throw new NotImplementedException("setFullScreen no implementado");
+}
+
+void GraphicDevice::SetRenderTarget(RenderTarget2D *renderTarget) {
+    if(renderTarget == NULL) {
+        if(this->renderTarget != NULL) {
+            glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+            this->renderTarget = NULL;
+        }
+    } else if(this->renderTarget == NULL || this->renderTarget->Pointer() != renderTarget->Pointer()) {
+        this->renderTarget = renderTarget;
+        
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, frameBuffer);
+        
+        glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, renderTarget->Pointer(), 0);
+        
+        glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, renderTarget->deepBufferPointer());
+    }
 }
 
 void GraphicDevice::setBlendState(BlendState blendState) {
@@ -183,7 +189,7 @@ void GraphicDevice::setVertexBuffer(VertexBuffer vertexBuffer){
     const VertexElement *ves = vd.GetVertexElements();
     GLint size; GLenum type; GLsizei stride; const GLvoid *ptr;
     
-    GNAglBindBufferARB(GL_ARRAY_BUFFER, vertexBuffer.pointer);
+    glBindBufferARB(GL_ARRAY_BUFFER, vertexBuffer.pointer);
     for(i=0; i < vd.getElementNumber(); i++){
         size   = VertexElement::GL_Type_Number(ves[i].vertexElementFormat);
         type   = VertexElement::GL_Type(ves[i].vertexElementFormat);
@@ -213,7 +219,7 @@ void GraphicDevice::setVertexBuffer(VertexBuffer vertexBuffer){
         }
     }
     
-    GNAglBindBufferARB(GL_ARRAY_BUFFER, 0);
+    glBindBufferARB(GL_ARRAY_BUFFER, 0);
 }
 
 
@@ -226,10 +232,10 @@ void GraphicDevice::DrawIndexedPrimitives (
                          //int startIndex,
                          int primitiveCount
                         ){
-    GNAglBindBufferARB(GL_ARRAY_BUFFER, 0);
+    glBindBufferARB(GL_ARRAY_BUFFER, 0);
     
-    GNAglBindBufferARB(GL_ARRAY_BUFFER, vertexBuffer.pointer);
-    GNAglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER, indexBuffer.pointer);
+    glBindBufferARB(GL_ARRAY_BUFFER, vertexBuffer.pointer);
+    glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER, indexBuffer.pointer);
     
     
     GLenum mask;
@@ -243,8 +249,8 @@ void GraphicDevice::DrawIndexedPrimitives (
                         mask,
                         (const GLvoid *)0);
     
-    GNAglBindBufferARB(GL_ARRAY_BUFFER, 0);
-    GNAglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindBufferARB(GL_ARRAY_BUFFER, 0);
+    glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 

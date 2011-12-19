@@ -1,0 +1,68 @@
+//    PARAMETERS:
+uniform float bloomStr;
+uniform sampler2D extraction;
+uniform sampler2D base;
+uniform float texScaler;
+
+//     VARYINGS:
+varying vec2 texCoord;
+
+
+// Vertex Shader:
+#ifdef VERTEX
+
+void main(void)
+{
+   vec2 P = sign(gl_Vertex.xy);
+   gl_Position = vec4(P, 0.0, 1.0 );
+   
+   texCoord = P * 0.5 + 0.5;
+}
+#endif
+
+// Fragment Shader:
+#ifdef FRAGMENT
+
+#define SAMPLES 7.0
+#define JUMP  1.1
+
+vec4 simHDR(vec4 color) {
+    color   *= 2.0;
+    vec4 ex = clamp(color - 1.0, 0.0, 1.0);
+    color   = clamp(color, 0.0, 1.0);
+    
+    color.x += ex.y + ex.z;
+    color.y += ex.x + ex.z;
+    color.z += ex.y + ex.x;
+    
+    color.a = 1.0;
+    return color;
+}
+
+   
+void main(void)
+{  
+    vec4 color = vec4(0.0);
+    float i;
+    
+    const float strLyr = 1.0 / SAMPLES;
+	
+    for(i = 0.0; i < SAMPLES; i++){
+        color += texture2DLod(extraction, texCoord, i*JUMP) * strLyr;
+    }
+   
+    color = simHDR(color);
+    
+   
+   
+   // gl_FragColor = color;
+    gl_FragColor = color*bloomStr + texture2D(base, texCoord)
+//  +clamp(10.0*texture2DLod(extraction, texCoord, 9.0), 0.0, 0.2)
+    +clamp(0.6*simHDR(texture2DLod(extraction, 1.0-texCoord, 7.0)), 0.0, 0.7);
+   // gl_FragColor = 
+   //    clamp(2.0*texture2DLod(extraction, texCoord, 6.0), 0.0, 0.3);
+   //    clamp(10.0*texture2DLod(extraction, texCoord, 8.0), 0.0, 0.3);
+}
+
+#endif
+

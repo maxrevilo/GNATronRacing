@@ -9,6 +9,7 @@
 #include "GNAFramework/MathHelper.h"
 #include "GNAFramework/Mouse.h"
 #include "GNAFramework/SpriteFont.h"
+#include "GNAFramework/RenderTarget2D.h"
 
 #include "tinyxml/tinyxml.h"
 
@@ -53,6 +54,10 @@ public:
 
     Texture2D *loading_tex;
     SpriteBatch *spriteBatch;
+    
+    RenderTarget2D *baseRender;
+    RenderTarget2D *brightRender;
+    Effect *bloomEffect;
 
     TronRacing() {
         Content->RootDirectory = (char *) "Content/";
@@ -91,7 +96,27 @@ public:
 
         spriteBatch = new SpriteBatch(this->graphicDevice);
         loading_tex = Content->Load<Texture2D > ("Loading.bmp");
-
+        
+        
+        int width  = graphicDevice->getViewPort().width, 
+            height = graphicDevice->getViewPort().height;
+        
+        DebugManager::debugInfo("Creating RenderTargets.");
+        baseRender = new RenderTarget2D(graphicDevice, width, height, false, BGRA,
+                (RenderTarget2D::DepthFormat) 0, 0, (RenderTarget2D::RenderTargetUsage)0);
+        baseRender->setSamplerAddressUV(Clamp);
+        
+        brightRender = new RenderTarget2D(graphicDevice, width, height / 2, true, BGRA,
+                (RenderTarget2D::DepthFormat) 0, 0, (RenderTarget2D::RenderTargetUsage)0);
+        brightRender->setSamplerAddressUV(Clamp);
+        
+        float bloomStr = 1.5f, texScaler = 0.003f;
+        bloomEffect = Content->Load<Effect>("Shaders/Bloom.prog");
+        bloomEffect->getParameter("bloomStr").SetValue<float>(&bloomStr);
+        bloomEffect->getParameter("texScaler").SetValue<float>(&texScaler);
+        bloomEffect->getParameter("extraction").SetValue<Texture2D>(brightRender);
+        bloomEffect->getParameter("base").SetValue<Texture2D>(baseRender);
+        
         DebugManager::debugInfo("Tron Race Initialized.");
     }
 
@@ -249,19 +274,19 @@ public:
                         case 1:
                             player->getFirstPersonView(p, f, u);
                             setCamera(p, f, u);
-                            miniDraw(DrawColor, gameTime);
+                            miniDraw(gameTime);
                             break;
                         case 2:
                             player->getThirdPersonView(p, f, u);
                             setCamera(p, f, u);
-                            miniDraw(DrawColor, gameTime);
+                            miniDraw(gameTime);
                             break;
                         case 3:
                             p = exitPosition->position + Vector3(0.f, 0.f, 2000.f);
                             f = player->Position();
                             u = Vector3::UnitZ;
                             setCamera(p, f, u);
-                            miniDraw(DrawColor, gameTime);
+                            miniDraw(gameTime);
                             break;
                         default:
                             
@@ -275,7 +300,7 @@ public:
                             graphicDevice->setViewPort(new_vp);
                             player->getFirstPersonView(p, f, u);
                             setCamera(p, f, u);
-                            miniDraw(DrawColor, gameTime);
+                            miniDraw(gameTime);
                             
                             //Third Person:
                             new_vp.Y = 0;
@@ -283,7 +308,7 @@ public:
                             graphicDevice->setViewPort(new_vp);
                             player->getThirdPersonView(p, f, u);
                             setCamera(p, f, u);
-                            miniDraw(DrawColor, gameTime);
+                            miniDraw(gameTime);
                             
                             
                             
@@ -295,7 +320,7 @@ public:
                             u = Vector3::UnitZ;
                             setCamera(p, f, u);
                             setCamera(p, f, u);
-                            miniDraw(DrawColor, gameTime);
+                            miniDraw(gameTime);
                             
                             
                             graphicDevice->setViewPort(old_vp);
@@ -303,9 +328,39 @@ public:
                     }
                 } else {
                     
-                    miniDraw(DrawColor, gameTime);
+                    miniDraw(gameTime);
                 }
+                
+                ViewPort vp = graphicDevice->getViewPort();
+                RectangleF rect = RectangleF(-vp.width, -vp.height, 2.0*vp.width,  2.0*vp.height);
+                graphicDevice->DeepBufferEnabled(false);
+                graphicDevice->DeepBufferWritteEnabled(false);
+                graphicDevice->setRasterizerState(RasterizerState::CullNone);
+                graphicDevice->setBlendState(BlendState::Opaque);
+                
+                brightRender->GenerateMipMaps();
+                
+                bloomEffect->Begin();
+                
+                glBegin(GL_QUADS);
+                    //Bottom-left vertex (corner)
+                    glTexCoord2i(0, 1);
+                    glVertex3f(rect.X, rect.Y, 0.0f);
 
+                    //Bottom-right vertex (corner)
+                    glTexCoord2i(1, 1);
+                    glVertex3f(rect.X + rect.width, rect.Y, 0.f);
+
+                    //Top-right vertex (corner)
+                    glTexCoord2i(1, 0);
+                    glVertex3f(rect.X + rect.width, rect.Y + rect.height, 0.f);
+
+                    //Top-left vertex (corner)
+                    glTexCoord2i(0, 0);
+                    glVertex3f(rect.X, rect.Y + rect.height, 0.f);
+                glEnd();
+                
+                bloomEffect->End();
             }
                 break;
 
@@ -315,6 +370,8 @@ public:
             case GameOver:
                 break;
         }
+        
+        
 
         DebugManager::debugInfo("End Drawing.");
         Game::Draw(gameTime);
@@ -332,18 +389,22 @@ public:
         camera = Camera(p, f, u, frustum);
     }
 
-    void miniDraw(DrawOptions, GameTime gameTime) {
+    void miniDraw(GameTime gameTime) {
 
         graphicDevice->DeepBufferEnabled(true);
         graphicDevice->DeepBufferWritteEnabled(true);
-
+        
         graphicDevice->setRasterizerState(RasterizerState::CullCounterClockwise);
         graphicDevice->setBlendState(BlendState::Opaque);
-
-
+        
+        
+        // <editor-fold defaultstate="collapsed" desc="Draw Color:">
+        graphicDevice->SetRenderTarget(baseRender);
+        graphicDevice->Clear(Color::Grey);
+        
         scenario->Draw(gameTime, DrawColor);
 
-
+        
         player->Draw(gameTime, DrawColor);
 
         for (int i = 0; i < enemies_length; i++) {
@@ -353,16 +414,52 @@ public:
         graphicDevice->DeepBufferWritteEnabled(false);
         graphicDevice->setBlendState(BlendState(BlendState::One, BlendState::One, BlendState::Add));
         graphicDevice->setRasterizerState(RasterizerState::CullNone);
-
+        
         player->DrawTrail(DrawColor);
 
         for (int i = 0; i < enemies_length; i++) {
             enemies[i]->DrawTrail(DrawColor);
         }
-
+        
+        // </editor-fold>
+        
         graphicDevice->DeepBufferWritteEnabled(true);
         graphicDevice->setBlendState(BlendState::Opaque);
         graphicDevice->setRasterizerState(RasterizerState::CullCounterClockwise);
+        
+        
+        
+        ViewPort old_vp = graphicDevice->getViewPort(), new_vp;
+        new_vp = old_vp;
+        //new_vp.width  = old_vp.width  * 2;
+        new_vp.height = old_vp.height / 2;
+        graphicDevice->setViewPort(new_vp);
+        
+        graphicDevice->SetRenderTarget(brightRender);
+        graphicDevice->Clear(Color::Black);
+        
+        
+        scenario->Draw(gameTime, DrawBright);
+        
+        player->Draw(gameTime, DrawColor);
+
+        for (int i = 0; i < enemies_length; i++) {
+            enemies[i]->Draw(gameTime, DrawColor);
+        }
+        
+        graphicDevice->DeepBufferWritteEnabled(false);
+        graphicDevice->setBlendState(BlendState(BlendState::One, BlendState::One, BlendState::Add));
+        graphicDevice->setRasterizerState(RasterizerState::CullNone);
+        
+        player->DrawTrail(DrawBright);
+
+        for (int i = 0; i < enemies_length; i++) {
+            enemies[i]->DrawTrail(DrawBright);
+        }
+        
+        graphicDevice->SetRenderTarget(NULL);
+        
+        graphicDevice->setViewPort(old_vp);
     }
 
     virtual void Exit() {

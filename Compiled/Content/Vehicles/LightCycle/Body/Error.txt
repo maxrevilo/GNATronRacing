@@ -1,0 +1,31 @@
+[RmPreviewGLManager.cpp] (line 8720): C l e a n i n g   a l l   rendering manager resources...
+[RmPreviewGLManager.cpp] (line 4959): OpenGL Preview Window: 2 passes with viewport (164 x 154) with main viewport (338 x 319) with 2 columns and 2 rows
+[RmPreviewGLManager.cpp] (line 4959): OpenGL Preview Window: 2 passes with viewport (164 x 154) with main viewport (338 x 319) with 2 columns and 2 rows
+[RmPreviewGLManager.cpp] (line 1609): 
+RmPreviewGLManager::CompileShadersHandler( RmNode* 0x0563E3D0 )
+[RmPreviewGLManager.cpp] (line 1609): 
+RmPreviewGLManager::CompileShadersHandler( RmNode* 0x0563E3D0 )
+[RmPreviewGLManager.cpp] (line 1609): 
+RmPreviewGLManager::CompileShadersHandler( RmNode* 0x0563E3D0 )
+[RmPreviewGLManager.cpp] (line 1609): 
+RmPreviewGLManager::CompileShadersHandler( RmNode* 0x0563E3D0 )
+[RmPreviewGLManager.cpp] (line 1609): 
+RmPreviewGLManager::CompileShadersHandler( RmNode* 0x0563E3D0 )
+[RmPreviewGLManager.cpp] (line 1609): 
+RmPreviewGLManager::CompileShadersHandler( RmNode* 0x0563E250 )
+[RmPreviewGLManager.cpp] (line 1609): 
+RmPreviewGLManager::CompileShadersHandler( RmNode* 0x0563E250 )
+[RmPreviewGLManager.cpp] (line 1609): 
+RmPreviewGLManager::CompileShadersHandler( RmNode* 0x0563E250 )
+[RmPreviewGLManager.cpp] (line 1609): 
+RmPreviewGLManager::CompileShadersHandler( RmNode* 0x0592CFD8 )
+[RmPreviewGLManager.cpp] (line 4959): OpenGL Preview Window: 3 passes with viewport (286 x 208) with main viewport (582 x 427) with 2 columns and 2 rows
+[RmPreviewGLManager.cpp] (line 1609): 
+RmPreviewGLManager::CompileShadersHandler( RmNode* 0x00000000 )
+[RmPreviewGLManager.cpp] (line 1609): 
+RmPreviewGLManager::CompileShadersHandler( RmNode* 0x0592CF58 )
+[RmPreviewGLManager.cpp] (line 4959): OpenGL Preview Window: 3 passes with viewport (286 x 208) with main viewport (582 x 427) with 2 columns and 2 rows
+[RmPreviewGLManager.cpp] (line 1609): 
+RmPreviewGLManager::CompileShadersHandler( RmNode* 0x00000000 )
+[RmPreviewGLManager.cpp] (line 1609): 
+RmPreviewGLManager::CompileShadersHandler( RmNode* 0x00000000 )

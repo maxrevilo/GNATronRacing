@@ -213,7 +213,7 @@ void LightCycle::Update(GameTime gameTime) {
     float mVel = (vel * time).Length();
     distance += mVel;
     
-    trail.Update(Matrix::CreateWorld(pos, rotation.Forward(), rotation.Up()), mVel);
+    trail.Update(Matrix::CreateWorld(pos, rotation.Forward(), rotation.Up()));
 }
 
 void LightCycle::Draw(GameTime gameTime, DrawOptions option) {
@@ -235,7 +235,7 @@ void LightCycle::Draw(GameTime gameTime, DrawOptions option) {
         }
         
         
-        float mixVal = 0.f;((vel * time).Length()/DataManager::turboSpeed);
+        float mixVal = (vel.Length()/DataManager::turboSpeed);
         Vector2 uvAdd = Vector2(0.0, -1.0) * distance / 300.f;
 
         game->graphicDevice->setBlendState(BlendState::Opaque);

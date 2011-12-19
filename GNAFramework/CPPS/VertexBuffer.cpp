@@ -23,17 +23,17 @@ VertexBuffer::VertexBuffer (
     this->vertexDeclaration = vertexDeclaration;
     this->VertexCount       = vertexCount;
     this->usage             = usage;
-    GNAglGenBuffersARB(1, &this->pointer);
+    glGenBuffersARB(1, &this->pointer);
 }
         
         
 void VertexBuffer::SetData(const void* data, int startVertex, int elementCount){
-    GNAglBindBufferARB(GL_ARRAY_BUFFER, pointer);
-    GNAglBufferDataARB( GL_ARRAY_BUFFER, 
+    glBindBufferARB(GL_ARRAY_BUFFER, pointer);
+    glBufferDataARB( GL_ARRAY_BUFFER, 
                         elementCount*vertexDeclaration.getVertexStride(),
                         ((char *)data) + startVertex*vertexDeclaration.getVertexStride(), 
                         GL_STATIC_DRAW);
-    GNAglBindBufferARB(GL_ARRAY_BUFFER, 0);
+    glBindBufferARB(GL_ARRAY_BUFFER, 0);
 }
 
 VertexBuffer::~VertexBuffer(){

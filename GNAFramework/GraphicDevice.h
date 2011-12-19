@@ -14,6 +14,8 @@
 
 namespace GNAFramework {
     
+    class RenderTarget2D;
+    
     struct ViewPort{
     public:
         int X;
@@ -70,9 +72,10 @@ namespace GNAFramework {
         void setRasterizerState(RasterizerState rasterizerState);
 
         bool isFullScreen();
+        
         void setFullScreen(bool fullScreen);
         
-        
+        void SetRenderTarget(RenderTarget2D *renderTarget);
         
         
         void DrawIndexedPrimitives (
@@ -103,6 +106,9 @@ namespace GNAFramework {
         bool fullScreen;
         GameWindow *gameWindow;
         Color *clearColor;
+        
+        unsigned int frameBuffer;
+        RenderTarget2D *renderTarget;
     };
 }
 

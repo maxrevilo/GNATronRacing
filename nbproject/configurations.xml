@@ -7,42 +7,26 @@
           <df name="Heightmaps">
           </df>
           <df name="Scenario">
-            <df name="Original">
-            </df>
           </df>
           <df name="Shaders">
           </df>
           <df name="Vehicles">
             <df name="LightCycle">
               <df name="Batton">
-                <df name="Original">
-                </df>
               </df>
               <df name="Body">
-                <df name="Original">
-                </df>
               </df>
               <df name="Cristal">
               </df>
               <df name="Disc">
-                <df name="Original">
-                </df>
               </df>
               <df name="Driver">
-                <df name="Original">
-                </df>
               </df>
               <df name="Engine">
-                <df name="Original">
-                </df>
               </df>
               <df name="Helmet">
-                <df name="Original">
-                </df>
               </df>
               <df name="Tire">
-                <df name="Original">
-                </df>
               </df>
             </df>
           </df>
@@ -52,7 +36,6 @@
       </df>
       <df name="GameActors">
         <df name="CPP">
-          <in>CameraState.cpp</in>
           <in>Enemy.cpp</in>
           <in>ExitPosition.cpp</in>
           <in>GameActor.cpp</in>
@@ -61,7 +44,6 @@
           <in>Trail.cpp</in>
         </df>
         <in>Camera.h</in>
-        <in>CameraState.h</in>
         <in>Cube.h</in>
         <in>Enemy.h</in>
         <in>ExitPosition.h</in>
@@ -101,6 +83,7 @@
           <in>Model.cpp</in>
           <in>Mouse.cpp</in>
           <in>RasterizerState.cpp</in>
+          <in>RenderTarget2D.cpp</in>
           <in>SpriteBatch.cpp</in>
           <in>SpriteFont.cpp</in>
           <in>StaticShaders.cpp</in>
@@ -129,6 +112,7 @@
         <in>Model.h</in>
         <in>Mouse.h</in>
         <in>RasterizerState.h</in>
+        <in>RenderTarget2D.h</in>
         <in>SpriteBatch.h</in>
         <in>SpriteFont.h</in>
         <in>SurfaceFormat.h</in>

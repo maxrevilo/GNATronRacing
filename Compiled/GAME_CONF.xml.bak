@@ -1,7 +1,0 @@
-<?xml version="1.0" ?>
-
-<camara>
-    <posicion x="50" y="60" z="0"/>
-    <centro   x="0" y="-5" z="0"/>
-</camara>
-

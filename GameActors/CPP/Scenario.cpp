@@ -16,22 +16,22 @@ Scenario::Scenario(Game* game, Camera *camera) : GameActor(game) {
     Mesh::initializeBuffers(game->graphicDevice);
 
     this->camera = camera;
-    
-    
+
+
     skyMap = new Model3D(game->graphicDevice, "Content/Scenario/skymap.obj");
     Effect *effect = game->Content->Load<Effect > ("Shaders/skymap.prog");
-    Texture2D *diffMap = game->Content->Load<Texture2D>("Scenario/skymap.bmp");
-    effect->getParameter("diffMap").SetValue<Texture2D>(diffMap);
+    Texture2D *diffMap = game->Content->Load<Texture2D > ("Scenario/skymap.bmp");
+    effect->getParameter("diffMap").SetValue<Texture2D > (diffMap);
     skyMapWVPMat = effect->getParameter("rMatWorldViewProjection");
     (*skyMap)[0]->effect = effect;
-    
+
 
     model = new Model3D(game->graphicDevice, "Content/Scenario/scenario.obj");
 
     if (model->Meshes() - 1 != 6) {
         throw new GNAException("El modelo se cambio pero no se ajusto la cantidad e EffectParameter en Scenario.");
     }
-    
+
     Vector2 uvScale = Vector2(1.f, 1.f);
     char path[256];
     for (int i = 0; i < model->Meshes() - 1; i++) {
@@ -40,16 +40,15 @@ Scenario::Scenario(Game* game, Camera *camera) : GameActor(game) {
         Effect *effect = game->Content->Load<Effect > ("Shaders/scenario.prog");
 
         sprintf(path, "Scenario/%s.bmp", name);
-        Texture2D *diffMap = game->Content->Load<Texture2D>(path);
+        Texture2D *diffMap = game->Content->Load<Texture2D > (path);
 
         modelWVPMat[i] = effect->getParameter("rMatWorldViewProjection");
-        effect->getParameter("diffMap").SetValue<Texture2D>(diffMap);
-        effect->getParameter("uvScale").SetValue<Vector2>(&uvScale);
-        
+        effect->getParameter("diffMap").SetValue<Texture2D > (diffMap);
+        effect->getParameter("uvScale").SetValue<Vector2 > (&uvScale);
+
         (*model)[i]->effect = effect;
     }
 }
-
 
 void Scenario::Initialize(TiXmlNode* node) {
     if (node == NULL)
@@ -109,52 +108,85 @@ void Scenario::Update(GameTime gameTime) {
 void Scenario::Draw(GameTime gameTime, DrawOptions option) {
     DebugManager::debugInfo("Drawing Scenario.");
 
-    // <editor-fold defaultstate="collapsed" desc="Scenario Draw">
-    Camera scCam = *camera;
-    Frustum frus = scCam.getFrustum();
-    float maxSize = (width > height ? width : height) * DataManager::unit_size;
-    scCam.setFrustum(Frustum(frus.getFovY(), frus.getAspectRatio(), maxSize, 1000 * maxSize));
+    switch (option) {
+        case DrawColor:
+        {
+            // <editor-fold defaultstate="collapsed" desc="Scenario Draw">
+            Camera scCam = *camera;
+            Frustum frus = scCam.getFrustum();
+            float maxSize = (width > height ? width : height) * DataManager::unit_size;
+            scCam.setFrustum(Frustum(frus.getFovY(), frus.getAspectRatio(), maxSize, 1000 * maxSize));
 
-    game->graphicDevice->setBlendState(BlendState::Opaque);
-    game->graphicDevice->setRasterizerState(RasterizerState::CullClockwise);
+            game->graphicDevice->setBlendState(BlendState::Opaque);
+            game->graphicDevice->setRasterizerState(RasterizerState::CullClockwise);
 
-    Matrix reorient = Matrix::Zeros;
-    reorient.M13(1.f);
-    reorient.M21(1.f);
-    reorient.M32(1.f);
-    reorient.M44(1.f);
+            Matrix reorient = Matrix::Zeros;
+            reorient.M13(1.f);
+            reorient.M21(1.f);
+            reorient.M32(1.f);
+            reorient.M44(1.f);
 
-    Matrix WVP = reorient * Matrix::CreateScale(maxSize) * camera->viewMatrix() * scCam.projectionMatrix();
-    
-    skyMapWVPMat.SetValue(&WVP);
-    skyMap->Draw();
-    
-    for (int i = 0; i < model->Meshes() - 1; i++) {
-        modelWVPMat[i].SetValue(&WVP);
-        if(strcmp((*model)[i]->Name, "Brillos")==0) continue;
-        
-        (*model)[i]->Draw();
-    }
-    
-    game->graphicDevice->setBlendState(BlendState(BlendState::One, BlendState::One, BlendState::Add));
-    (*model)["Brillos"]->Draw();
-    
-    
-    game->graphicDevice->setRasterizerState(RasterizerState::CullCounterClockwise);
-    game->graphicDevice->Clear(GraphicDevice::DepthBuffer, Color::Blue, 1.0, 0);
-    // </editor-fold>
-    
-    Matrix floor_world = Matrix::CreateScale(width * DataManager::unit_size, height * DataManager::unit_size, 1.f);
+            Matrix WVP = reorient * Matrix::CreateScale(maxSize) * camera->viewMatrix() * scCam.projectionMatrix();
 
-    DebugManager::debugInfo("Drawing Floor.");
-    game->graphicDevice->setBlendState(BlendState::NonPremultiplied);
-    floor.Draw(camera, floor_world, game->graphicDevice, option);
-    
-    game->graphicDevice->setBlendState(BlendState::Opaque);
+            skyMapWVPMat.SetValue(&WVP);
+            skyMap->Draw();
 
-    DebugManager::debugInfo("    Drawing meshes.");
-    for (int i = 0; i < meshes_length; i++) {
-        meshes[i].Draw(camera, game->graphicDevice, option);
+            for (int i = 0; i < model->Meshes() - 1; i++) {
+                modelWVPMat[i].SetValue(&WVP);
+                if (strcmp((*model)[i]->Name, "Brillos") == 0) continue;
+
+                (*model)[i]->Draw();
+            }
+
+            //game->graphicDevice->setBlendState(BlendState(BlendState::One, BlendState::One, BlendState::Add));
+            //(*model)["Brillos"]->Draw();
+
+
+            game->graphicDevice->setRasterizerState(RasterizerState::CullCounterClockwise);
+            game->graphicDevice->Clear(GraphicDevice::DepthBuffer, Color::Blue, 1.0, 0);
+            // </editor-fold>
+
+            Matrix floor_world = Matrix::CreateScale(width * DataManager::unit_size, height * DataManager::unit_size, 1.f);
+
+            DebugManager::debugInfo("Drawing Floor.");
+            game->graphicDevice->setBlendState(BlendState::NonPremultiplied);
+            floor.Draw(camera, floor_world, game->graphicDevice, option);
+
+            game->graphicDevice->setBlendState(BlendState::Opaque);
+
+            DebugManager::debugInfo("    Drawing meshes.");
+            for (int i = 0; i < meshes_length; i++) {
+                meshes[i].Draw(camera, game->graphicDevice, option);
+            }
+        }
+            break;
+        case DrawBright: 
+        {
+            Camera scCam = *camera;
+            Frustum frus = scCam.getFrustum();
+            float maxSize = (width > height ? width : height) * DataManager::unit_size;
+            scCam.setFrustum(Frustum(frus.getFovY(), frus.getAspectRatio(), maxSize, 1000 * maxSize));
+
+            game->graphicDevice->setBlendState(BlendState::Opaque);
+            game->graphicDevice->setRasterizerState(RasterizerState::CullClockwise);
+
+            Matrix reorient = Matrix::Zeros;
+            reorient.M13(1.f);
+            reorient.M21(1.f);
+            reorient.M32(1.f);
+            reorient.M44(1.f);
+
+            Matrix WVP = reorient * Matrix::CreateScale(maxSize) * camera->viewMatrix() * scCam.projectionMatrix();
+            
+            for (int i = 0; i < model->Meshes() - 1; i++) {
+                if (strcmp((*model)[i]->Name, "Luces") == 0) {
+                    modelWVPMat[i].SetValue(&WVP);
+                    (*model)[i]->Draw();
+                    break;
+                }
+            }
+        }
+            break;
     }
 }
 

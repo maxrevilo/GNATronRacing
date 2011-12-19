@@ -9,7 +9,13 @@
 
 namespace GNAFramework {
 
- class Texture2D : public Texture {
+    enum TextureAddressMode {
+        Wrap = 0,
+        Clamp = 1,
+        //Mirror = 2,
+    };
+
+    class Texture2D : public Texture {
         friend class SpriteBatch;
     public:
 
@@ -19,7 +25,11 @@ namespace GNAFramework {
         int getWidth() const;
         int getHeight() const;
         RectangleF getBounds() const;
-
+        
+        void setSamplerAddressUV(TextureAddressMode addressMode);
+        void setSamplerAddressU(TextureAddressMode addressMode);
+        void setSamplerAddressV(TextureAddressMode addressMode);
+        
         void UseMipMap(bool mipMap);
 
         Texture2D(GraphicDevice *graphicsDevice, int width, int height);
@@ -40,11 +50,12 @@ namespace GNAFramework {
          * @param y
          */
         void setPixel(Color data, int x, int y);
-        
-        
-        GLuint Pointer() const{ return pointer; };
-        
-        
+
+        GLuint Pointer() const {
+            return pointer;
+        };
+
+
         /**
          * Colorea una region de la textura de color "data" en el rectangulo definido
          * por "rect".

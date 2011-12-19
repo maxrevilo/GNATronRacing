@@ -24,7 +24,7 @@ IndexBuffer::IndexBuffer (
     this->indexElementSize = indexElementSize;
     this->indexCount       = indexCount;
     this->usage            = usage;
-    GNAglGenBuffersARB(1, &this->pointer);
+    glGenBuffersARB(1, &this->pointer);
 }
 
 
@@ -44,16 +44,16 @@ int IndexBuffer::elementSize(IndexElementSize ies){
 namespace GNAFramework {
     template <>
     void IndexBuffer::SetData<short>(const short* data, int startIndex, int elementCount){
-        GNAglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER, pointer);
+        glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER, pointer);
         //printf("glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER, %d, data, GL_STATIC_DRAW);\n", elementCount*elementSize(indexElementSize));
-        GNAglBufferDataARB(GL_ELEMENT_ARRAY_BUFFER, elementCount*elementSize(indexElementSize), data, GL_STATIC_DRAW);
+        glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER, elementCount*elementSize(indexElementSize), data, GL_STATIC_DRAW);
     }
     
     template <>
     void IndexBuffer::SetData<int>(const int* data, int startIndex, int elementCount){
-        GNAglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER, pointer);
+        glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER, pointer);
         
-        GNAglBufferDataARB(GL_ELEMENT_ARRAY_BUFFER, elementCount*elementSize(indexElementSize), data, GL_STATIC_DRAW);
+        glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER, elementCount*elementSize(indexElementSize), data, GL_STATIC_DRAW);
     }
 }
 

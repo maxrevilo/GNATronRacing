@@ -5,6 +5,7 @@
 #include "Texture.h"
 #include "Texture2D.h"
 #include "SurfaceFormat.h"
+#include "RenderTarget2D.h"
 
 #endif	/* TEXTURES_H */
 
