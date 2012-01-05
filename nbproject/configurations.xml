@@ -36,18 +36,24 @@
       </df>
       <df name="GameActors">
         <df name="CPP">
+          <in>AnamorphicBloom.cpp</in>
+          <in>DirectorCamera.cpp</in>
           <in>Enemy.cpp</in>
           <in>ExitPosition.cpp</in>
           <in>GameActor.cpp</in>
+          <in>GaussianBlur.cpp</in>
           <in>LightCycle.cpp</in>
           <in>Scenario.cpp</in>
           <in>Trail.cpp</in>
         </df>
+        <in>AnamorphicBloom.h</in>
         <in>Camera.h</in>
         <in>Cube.h</in>
+        <in>DirectorCamera.h</in>
         <in>Enemy.h</in>
         <in>ExitPosition.h</in>
         <in>GameActor.h</in>
+        <in>GaussianBlur.h</in>
         <in>LightCycle.h</in>
         <in>Plane.h</in>
         <in>Ray.h</in>

@@ -1,0 +1,47 @@
+//    PARAMETERS:
+uniform float brightStr;
+uniform float flare;
+uniform sampler2D b0;
+uniform sampler2D b1;
+uniform sampler2D b2;
+
+
+//     VARYINGS:
+
+// Coordenadas U,V del objeto:
+varying vec2 texCoord;
+
+// Vertex Shader:
+#ifdef VERTEX
+
+void main(void)
+{
+   gl_Position = gl_Vertex;
+   texCoord = gl_MultiTexCoord0.xy;
+}
+
+#endif
+
+// Fragment Shader:
+#ifdef FRAGMENT
+
+void main(void) {
+   
+    vec4 Bloom = 
+        texture2D(b0, texCoord) +
+        texture2D(b1, texCoord) +
+        texture2D(b2, texCoord);
+    /*
+    if(flare > 0.0) {
+        Bloom +=(
+            texture2DLod(b2, 1.4*(1.0-texCoord) - 0.15, 4.0) +
+            texture2DLod(b2, (texCoord - 0.4)* 5.0, 4.0) +
+            texture2DLod(b2, (texCoord -0.25)* 2.0, 4.0)
+            )* flare * 3.0 ;
+    }
+      */
+    gl_FragColor = Bloom / 3.0* brightStr;
+}
+
+#endif
+

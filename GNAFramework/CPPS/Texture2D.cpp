@@ -11,38 +11,32 @@
 
 namespace GNAFramework {
 
-    void Texture2D::init(GraphicDevice *graphicsDevice, int width, int height, bool mipMap, SurfaceFormat format){
+    void Texture2D::init(GraphicDevice *graphicsDevice, int width, int height, bool mipMap, SurfaceFormat format) {
         this->height = height;
         this->width = width;
         this->LevelCount = 1;
         this->format = format;
         this->graphicDevice = graphicsDevice;
-        int bpp =  ((format == RGBA) || (format == BGRA)) ? 4 : 3;
+        int bpp = ((format == RGBA) || (format == BGRA)) ? 4 : 3;
 
         // Have OpenGL generate a texture object handle for us
         glGenTextures(1, &pointer);
 
         // Bind the texture object
         glActiveTextureARB(GL_TEXTURE0_ARB);
-                
+
         glBindTexture(GL_TEXTURE_2D, pointer);
 
-        glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
-        
-        // Set the texture's stretching properties
-        if(mipMap){
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
-        } else {
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        }
-        
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+        UseMipMap(mipMap);
+        MaxFiltering(Bilinear);
+        MinFiltering(Trilinear);
         
         
+        setSamplerAddressUV(Wrap);
+
+
         // Edit the texture object's image data using the information SDL_Surface gives us
         glTexImage2D(GL_TEXTURE_2D, 0, bpp, width, height, 0, format, GL_UNSIGNED_BYTE, NULL);
     }
@@ -54,52 +48,63 @@ namespace GNAFramework {
     Texture2D::Texture2D(GraphicDevice *graphicsDevice, int width, int height, bool mipMap, SurfaceFormat format) {
         init(graphicsDevice, width, height, mipMap, format);
     }
-    
-    static GLuint addressModes[3] = {GL_REPEAT, GL_CLAMP, 0};
-    
-    
+
+    static GLuint addressModes[3] = {GL_REPEAT, GL_CLAMP, GL_MIRRORED_REPEAT};
+
     void Texture2D::setSamplerAddressUV(TextureAddressMode addressMode) {
         glActiveTextureARB(GL_TEXTURE0_ARB);
         glBindTexture(GL_TEXTURE_2D, pointer);
-        
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, addressModes[addressMode] );
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, addressModes[addressMode] );
+
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, addressModes[addressMode]);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, addressModes[addressMode]);
     }
-    
+
     void Texture2D::setSamplerAddressU(TextureAddressMode addressMode) {
         glActiveTextureARB(GL_TEXTURE0_ARB);
         glBindTexture(GL_TEXTURE_2D, pointer);
-        
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, addressModes[addressMode] );
+
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, addressModes[addressMode]);
     }
-    
+
     void Texture2D::setSamplerAddressV(TextureAddressMode addressMode) {
         glActiveTextureARB(GL_TEXTURE0_ARB);
         glBindTexture(GL_TEXTURE_2D, pointer);
-        
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, addressModes[addressMode] );
+
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, addressModes[addressMode]);
+    }
+
+    static GLuint filteringModes[4] = {GL_NEAREST, GL_LINEAR, GL_LINEAR_MIPMAP_NEAREST, GL_LINEAR_MIPMAP_LINEAR};
+
+    void Texture2D::MaxFiltering(TextureFilteringMode mode) {
+        glActiveTextureARB(GL_TEXTURE0_ARB);
+        glBindTexture(GL_TEXTURE_2D, pointer);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filteringModes[mode]);
+    }
+
+    void Texture2D::MinFiltering(TextureFilteringMode mode) {
+        glActiveTextureARB(GL_TEXTURE0_ARB);
+        glBindTexture(GL_TEXTURE_2D, pointer);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filteringModes[mode]);
     }
     
     
+
     void Texture2D::UseMipMap(bool mipMap) {
-            glActiveTextureARB(GL_TEXTURE0_ARB);
-            
-            glBindTexture(GL_TEXTURE_2D, pointer);
-            
-            // Set the texture's stretching properties
-            if(mipMap){
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-                glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
-            } else {
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-            }
+        glActiveTextureARB(GL_TEXTURE0_ARB);
+        glBindTexture(GL_TEXTURE_2D, pointer);
+
+        if (mipMap) {
+            glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+        } else {
+            glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE);
         }
-    
+    }
+
     Texture2D *Texture2D::FromStream(GraphicDevice *graphicsDevice, const uint8_t *stream, int width, int height, SurfaceFormat format) {
         Texture2D *result = new Texture2D(graphicsDevice, width, height, true, format);
-        
+
         glActiveTextureARB(GL_TEXTURE0_ARB);
         glBindTexture(GL_TEXTURE_2D, result->pointer);
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, format, GL_UNSIGNED_BYTE, (const GLvoid *) stream);
@@ -168,21 +173,19 @@ namespace GNAFramework {
     void Texture2D::setData<Color>(const Color *data) {
         int size = width * height;
         int i;
-        uint8_t *raw = (uint8_t *) malloc(sizeof(uint8_t) * size * 4);
+        uint8_t *raw = (uint8_t *) malloc(sizeof (uint8_t) * size * 4);
 
-        for(i = 0; i < size; i++){
-            ARGBToRaw(data[i], format, raw + 4*i);
+        for (i = 0; i < size; i++) {
+            ARGBToRaw(data[i], format, raw + 4 * i);
         }
 
-        setData<uint8_t>(raw);
+        setData<uint8_t > (raw);
 
         free(raw);
     }
 
-
-
     template <>
-    void Texture2D::getData<uint8_t>(uint8_t *data, int startIndex, int elementCount) const{
+    void Texture2D::getData<uint8_t>(uint8_t *data, int startIndex, int elementCount) const {
         if (startIndex * elementCount < 0) {
             //perror("InalidArgument: los indices deben ser mayores a 0");
             exit(1);
@@ -194,10 +197,10 @@ namespace GNAFramework {
             //perror("InalidArgument: fuera de los indices de la textura");
             exit(1);
         }
-        
-        uint8_t *raw  = new uint8_t[size];
+
+        uint8_t *raw = new uint8_t[size];
         uint8_t *rawI = raw;
-        
+
         glActiveTextureARB(GL_TEXTURE0_ARB);
         glBindTexture(GL_TEXTURE_2D, this->pointer);
         glGetTexImage(GL_TEXTURE_2D, 0, format, GL_UNSIGNED_BYTE, raw);
@@ -208,12 +211,12 @@ namespace GNAFramework {
     }
 
     template <>
-    void Texture2D::getData<uint8_t>(uint8_t *data) const{
+    void Texture2D::getData<uint8_t>(uint8_t *data) const {
         getData<uint8_t > (data, 0, height * width * 4);
     }
 
     template <>
-    void Texture2D::getData<Color>(Color *data, int startIndex, int elementCount) const{
+    void Texture2D::getData<Color>(Color *data, int startIndex, int elementCount) const {
         if (startIndex * elementCount < 0) {
             //perror("InalidArgument: los indices deben ser mayores a 0");
             exit(1);
@@ -225,10 +228,10 @@ namespace GNAFramework {
             //perror("InalidArgument: fuera de los indices de la textura");
             exit(1);
         }
-        
+
         uint8_t *raw = new uint8_t[4 * size];
         uint8_t *rawI = raw;
-        
+
         glActiveTextureARB(GL_TEXTURE0_ARB);
         glBindTexture(GL_TEXTURE_2D, this->pointer);
         glGetTexImage(GL_TEXTURE_2D, 0, format, GL_UNSIGNED_BYTE, raw);
@@ -244,30 +247,27 @@ namespace GNAFramework {
     }
 
     template <>
-    void Texture2D::getData<Color>(Color *data) const{
-        getData<Color> (data, 0, height * width);
+    void Texture2D::getData<Color>(Color *data) const {
+        getData<Color > (data, 0, height * width);
     }
 
-
-
-
-    SurfaceFormat Texture2D::getFormat() const{
+    SurfaceFormat Texture2D::getFormat() const {
         return format;
     }
 
-    int Texture2D::getLevelCount() const{
+    int Texture2D::getLevelCount() const {
         return LevelCount;
     }
 
-    int Texture2D::getWidth() const{
+    int Texture2D::getWidth() const {
         return width;
     }
 
-    int Texture2D::getHeight() const{
+    int Texture2D::getHeight() const {
         return height;
     }
 
-    RectangleF Texture2D::getBounds() const{
+    RectangleF Texture2D::getBounds() const {
         RectangleF rect;
         rect.setValue(0.f, 0.f, width, height);
         return rect;

@@ -1,0 +1,52 @@
+//    PARAMETERS:
+uniform float     minGasussStr;
+uniform sampler2D gaussFun;
+
+uniform float     texScale;
+uniform float     samples;
+uniform sampler2D source;
+
+uniform float     level;
+uniform vec2      dir;
+
+
+//     VARYINGS:
+
+// Coordenadas U,V del objeto:
+varying vec2 texCoord;
+
+// Vertex Shader:
+#ifdef VERTEX
+
+void main(void)
+{
+   gl_Position = gl_Vertex;
+   texCoord = gl_MultiTexCoord0.xy;
+}
+
+#endif
+
+// Fragment Shader:
+#ifdef FRAGMENT
+
+void main(void) {
+   vec4 color = vec4(0.0);
+   int i;
+   
+   float base = -floor(samples / 2.0);
+   float str;
+   
+   for(i = 0; i < samples; i++) {
+      str    = texture2D(gaussFun, vec2( i / (samples - 1.0), 0.0)).r + minGasussStr;
+      color += texture2DLod(source, texCoord + dir * (i + base) * texScale * pow(2.0, level), level) * str;
+   }
+   
+   color = color / samples;
+   
+   color.a = 1.0;
+   
+   gl_FragColor = color;
+}
+
+#endif
+

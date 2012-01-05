@@ -1,0 +1,55 @@
+//    PARAMETERS:
+uniform float brightStr;
+uniform sampler2D b0;
+uniform sampler2D b1;
+uniform sampler2D b2;
+uniform sampler2D b3;
+
+
+//     VARYINGS:
+
+// Coordenadas U,V del objeto:
+varying vec2 texCoord;
+
+// Vertex Shader:
+#ifdef VERTEX
+
+void main(void)
+{
+   vec2 P = sign( gl_Vertex.xy );
+   gl_Position = vec4( P, 0.0, 1.0 );
+   
+   texCoord = P * 0.5 + 0.5;
+}
+
+#endif
+
+// Fragment Shader:
+#ifdef FRAGMENT
+
+vec4 simHDR(vec4 color) {
+    color   *= 2.2;
+    vec4 ex = clamp(color - 1.0, 0.0, 1.0);
+    color   = clamp(color, 0.0, 1.0);
+    
+    color.x += ex.y + ex.z;
+    color.y += ex.x + ex.z;
+    color.z += ex.y + ex.x;
+    
+    color.a = 1.0;
+    return color;
+}
+
+void main(void) {
+   
+   vec4 Bloom = 
+      texture2D(b0, texCoord) +
+      texture2D(b1, texCoord) +
+      texture2D(b2, texCoord) +
+      texture2D(b3, texCoord);
+   
+   gl_FragColor = simHDR(Bloom / 4.0)*brightStr;
+}
+
+#endif
+

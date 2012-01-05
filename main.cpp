@@ -20,6 +20,9 @@
 #include "GameActors/Scenario.h"
 #include "GameActors/Enemy.h"
 #include "GameActors/ExitPosition.h"
+#include "GameActors/DirectorCamera.h"
+#include "GameActors/AnamorphicBloom.h"
+#include "GameActors/GaussianBlur.h"
 
 using namespace GNAFramework;
 
@@ -45,7 +48,10 @@ public:
     int cameras;
 
     Camera camera;
+    DirectorCamera *dirCamera;
     //CameraState camState;
+    
+    
     Scenario *scenario;
     LightCycle *player;
 
@@ -55,9 +61,8 @@ public:
     Texture2D *loading_tex;
     SpriteBatch *spriteBatch;
     
-    RenderTarget2D *baseRender;
-    RenderTarget2D *brightRender;
-    Effect *bloomEffect;
+    AnamorphicBloom *anBloom;
+    GaussianBlur    *gaBlur;
 
     TronRacing() {
         Content->RootDirectory = (char *) "Content/";
@@ -75,7 +80,11 @@ public:
         float ar = graphicDevice->getViewPort().aspectRatio();
         camera = Camera(Vector3(-555, 430, 320) * DataManager::unit_size, Vector3(0, 0, 500.f) * DataManager::unit_size, Vector3(0, 0, 1), Frustum(45.0f, ar, 1.f, 10000.0f));
         cameras = 1;
-
+        
+        dirCamera = new DirectorCamera(graphicDevice, camera);
+        dirCamera->moveSpeed = 500.f;
+        dirCamera->PlanesChangeSpeed = 500.f;
+        
 
         DebugManager::debugInfo("Instantiating Scenario");
         scenario = new Scenario(this, &camera);
@@ -101,21 +110,8 @@ public:
         int width  = graphicDevice->getViewPort().width, 
             height = graphicDevice->getViewPort().height;
         
-        DebugManager::debugInfo("Creating RenderTargets.");
-        baseRender = new RenderTarget2D(graphicDevice, width, height, false, BGRA,
-                (RenderTarget2D::DepthFormat) 0, 0, (RenderTarget2D::RenderTargetUsage)0);
-        baseRender->setSamplerAddressUV(Clamp);
-        
-        brightRender = new RenderTarget2D(graphicDevice, width, height / 2, true, BGRA,
-                (RenderTarget2D::DepthFormat) 0, 0, (RenderTarget2D::RenderTargetUsage)0);
-        brightRender->setSamplerAddressUV(Clamp);
-        
-        float bloomStr = 1.5f, texScaler = 0.003f;
-        bloomEffect = Content->Load<Effect>("Shaders/Bloom.prog");
-        bloomEffect->getParameter("bloomStr").SetValue<float>(&bloomStr);
-        bloomEffect->getParameter("texScaler").SetValue<float>(&texScaler);
-        bloomEffect->getParameter("extraction").SetValue<Texture2D>(brightRender);
-        bloomEffect->getParameter("base").SetValue<Texture2D>(baseRender);
+        anBloom = new AnamorphicBloom(this, "Shaders", width/2, height/2, 30);
+        gaBlur  = new GaussianBlur(this, "Shaders", anBloom->getCaputedImage(), 10);
         
         DebugManager::debugInfo("Tron Race Initialized.");
     }
@@ -255,9 +251,8 @@ public:
             case Loading:
             {
                 graphicDevice->DeepBufferEnabled(false);
-                ViewPort vp = graphicDevice->getViewPort();
                 spriteBatch->Begin(SpriteBatch::Immediate, BlendState::Opaque);
-                spriteBatch->Draw(loading_tex, RectangleF(0.f, 0.f, vp.width, vp.height), Color::White);
+                spriteBatch->DrawFullScreen(loading_tex, Color::White);
                 spriteBatch->End();
 
                 paused = false;
@@ -288,8 +283,8 @@ public:
                             setCamera(p, f, u);
                             miniDraw(gameTime);
                             break;
-                        default:
-                            
+                        case 4:
+                        {
                             ViewPort new_vp, old_vp = graphicDevice->getViewPort();
                             new_vp = old_vp;
                             
@@ -324,6 +319,13 @@ public:
                             
                             
                             graphicDevice->setViewPort(old_vp);
+                        }
+                            break;
+                        default:
+                            dirCamera->Update(gameTime);
+                            camera = dirCamera->camera;
+                            
+                            miniDraw(gameTime);
                             break;
                     }
                 } else {
@@ -331,36 +333,6 @@ public:
                     miniDraw(gameTime);
                 }
                 
-                ViewPort vp = graphicDevice->getViewPort();
-                RectangleF rect = RectangleF(-vp.width, -vp.height, 2.0*vp.width,  2.0*vp.height);
-                graphicDevice->DeepBufferEnabled(false);
-                graphicDevice->DeepBufferWritteEnabled(false);
-                graphicDevice->setRasterizerState(RasterizerState::CullNone);
-                graphicDevice->setBlendState(BlendState::Opaque);
-                
-                brightRender->GenerateMipMaps();
-                
-                bloomEffect->Begin();
-                
-                glBegin(GL_QUADS);
-                    //Bottom-left vertex (corner)
-                    glTexCoord2i(0, 1);
-                    glVertex3f(rect.X, rect.Y, 0.0f);
-
-                    //Bottom-right vertex (corner)
-                    glTexCoord2i(1, 1);
-                    glVertex3f(rect.X + rect.width, rect.Y, 0.f);
-
-                    //Top-right vertex (corner)
-                    glTexCoord2i(1, 0);
-                    glVertex3f(rect.X + rect.width, rect.Y + rect.height, 0.f);
-
-                    //Top-left vertex (corner)
-                    glTexCoord2i(0, 0);
-                    glVertex3f(rect.X, rect.Y + rect.height, 0.f);
-                glEnd();
-                
-                bloomEffect->End();
             }
                 break;
 
@@ -380,10 +352,12 @@ public:
     void setCamera(Vector3 p, Vector3 f, Vector3 u) {
         Frustum frustum;
         float ar = graphicDevice->getViewPort().aspectRatio();
-        if (cameras == 0) {
-            frustum = Frustum(76.0f, ar, 1.f, 10000.0f);
-        } else {
-            frustum = Frustum(50.0f, ar, 1.f, 10000.0f);
+        if (cameras == 1) {
+            frustum = Frustum(76.0f, ar, 2.f, 10000.0f);
+        } else if(cameras == 2) {
+            frustum = Frustum(50.0f, ar, 10.f, 10000.0f);
+        } else if(cameras == 3) {
+            frustum = Frustum(50.0f, ar, 1000.f, 50000.0f);
         }
 
         camera = Camera(p, f, u, frustum);
@@ -399,8 +373,8 @@ public:
         
         
         // <editor-fold defaultstate="collapsed" desc="Draw Color:">
-        graphicDevice->SetRenderTarget(baseRender);
-        graphicDevice->Clear(Color::Grey);
+        //graphicDevice->SetRenderTarget(baseRender);
+        //graphicDevice->Clear(Color::Grey);
         
         scenario->Draw(gameTime, DrawColor);
 
@@ -429,24 +403,18 @@ public:
         
         
         
-        ViewPort old_vp = graphicDevice->getViewPort(), new_vp;
-        new_vp = old_vp;
-        //new_vp.width  = old_vp.width  * 2;
-        new_vp.height = old_vp.height / 2;
-        graphicDevice->setViewPort(new_vp);
-        
-        graphicDevice->SetRenderTarget(brightRender);
-        graphicDevice->Clear(Color::Black);
-        
+        anBloom->Begin();
         
         scenario->Draw(gameTime, DrawBright);
         
+        /*
         player->Draw(gameTime, DrawColor);
 
         for (int i = 0; i < enemies_length; i++) {
             enemies[i]->Draw(gameTime, DrawColor);
         }
         
+         
         graphicDevice->DeepBufferWritteEnabled(false);
         graphicDevice->setBlendState(BlendState(BlendState::One, BlendState::One, BlendState::Add));
         graphicDevice->setRasterizerState(RasterizerState::CullNone);
@@ -456,10 +424,12 @@ public:
         for (int i = 0; i < enemies_length; i++) {
             enemies[i]->DrawTrail(DrawBright);
         }
+        */
         
-        graphicDevice->SetRenderTarget(NULL);
         
-        graphicDevice->setViewPort(old_vp);
+        anBloom->End();
+        gaBlur->Apply();
+        
     }
 
     virtual void Exit() {
@@ -502,6 +472,7 @@ public:
                 cameras = 4;
             } else if (im.KeyPressed(Keyboard::F5)) {
                 cameras = 5;
+                dirCamera->camera = camera;
             } else if (im.KeyPressed(Keyboard::F6)) {
                 cameras = 6;
             }

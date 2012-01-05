@@ -12,7 +12,14 @@ namespace GNAFramework {
     enum TextureAddressMode {
         Wrap = 0,
         Clamp = 1,
-        //Mirror = 2,
+        Mirror = 2
+    };
+    
+    enum TextureFilteringMode {
+        Nearest,
+        Linear,
+        Bilinear,
+        Trilinear
     };
 
     class Texture2D : public Texture {
@@ -29,6 +36,9 @@ namespace GNAFramework {
         void setSamplerAddressUV(TextureAddressMode addressMode);
         void setSamplerAddressU(TextureAddressMode addressMode);
         void setSamplerAddressV(TextureAddressMode addressMode);
+        
+        void MaxFiltering(TextureFilteringMode mode);
+        void MinFiltering(TextureFilteringMode mode);
         
         void UseMipMap(bool mipMap);
 

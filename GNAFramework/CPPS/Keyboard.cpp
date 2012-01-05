@@ -19,9 +19,8 @@ KeyboardState Keyboard::getState() {
             keysStatus[i] = false;
     }
 
-    while (SDL_PollEvent(&keyevent)) //Poll our SDL key event for any keystrokes.
+    while (SDL_PollEvent(&keyevent))
     {
-        bool val;
         switch (keyevent.type) {
             case SDL_KEYDOWN:
                 keysStatus[keyevent.key.keysym.sym] = true;

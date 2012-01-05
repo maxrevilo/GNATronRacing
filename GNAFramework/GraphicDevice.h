@@ -27,6 +27,12 @@ namespace GNAFramework {
             X = Y = width = height = 0;
         }
         
+        ViewPort(int X, int Y, int Width, int Height) {
+            this->X = X; this->Y = Y;
+            this->height = Height;
+            this->width  = Width;
+        }
+        
         float aspectRatio() { return (float) width / (float) height; }
         
         //Vector3 Unproject(Vector3 source, Matrix projection, Matrix view, Matrix world);

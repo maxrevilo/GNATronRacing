@@ -45,23 +45,18 @@ void main(void)
     vec4 color = vec4(0.0);
     float i;
     
+    
     const float strLyr = 1.0 / SAMPLES;
 	
     for(i = 0.0; i < SAMPLES; i++){
         color += texture2DLod(extraction, texCoord, i*JUMP) * strLyr;
     }
-   
+    
     color = simHDR(color);
     
-   
-   
-   // gl_FragColor = color;
     gl_FragColor = color*bloomStr + texture2D(base, texCoord)
 //  +clamp(10.0*texture2DLod(extraction, texCoord, 9.0), 0.0, 0.2)
     +clamp(0.6*simHDR(texture2DLod(extraction, 1.0-texCoord, 7.0)), 0.0, 0.7);
-   // gl_FragColor = 
-   //    clamp(2.0*texture2DLod(extraction, texCoord, 6.0), 0.0, 0.3);
-   //    clamp(10.0*texture2DLod(extraction, texCoord, 8.0), 0.0, 0.3);
 }
 
 #endif

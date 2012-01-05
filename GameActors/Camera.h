@@ -54,6 +54,11 @@ public:
     Vector3 getUp()       const { return up;       }
     Frustum getFrustum()  const { return frustum; }
     
+    Vector3 getForward()  const { return Vector3::Normalize(focus - position); }
+    Vector3 getRight()    const {
+        return Vector3::Normalize(Vector3::Cross(up ,focus - position)); 
+    }
+    
     
     void setFocus(Vector3 value) {
         focus = value;

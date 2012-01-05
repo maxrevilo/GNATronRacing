@@ -8,16 +8,26 @@
 
 using namespace GNAFramework;
 
+Effect         *SpriteBatch::effect = NULL;
+EffectParameter SpriteBatch::color;
+EffectParameter SpriteBatch::src;
+
 SpriteBatch::SpriteBatch(GraphicDevice *graphicDevice) {
     this->graphicDevice = graphicDevice;
     begin = false;
     SaveState = false;
+    
+    if(effect == NULL) {
+        effect = new Effect(graphicDevice, "uniform sampler2D src; uniform vec4 color; varying vec2 tc;\n#ifdef VERTEX\nvoid main(void){gl_Position=gl_Vertex;tc=gl_MultiTexCoord0.xy;}\n#endif\n#ifdef FRAGMENT\nvoid main(void){gl_FragColor=texture2D(src,tc)*color;}\n#endif\n");
+        color  = effect->getParameter("color");
+        src    = effect->getParameter("src");
+    }
 }
 
 void SpriteBatch::set2DDrawState(){
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-
+    
     ViewPort vp = graphicDevice->getViewPort();
 
     glOrtho(0.0f, vp.width, vp.height, 0.0f, -1.0f, 1.0f);
@@ -27,14 +37,11 @@ void SpriteBatch::set2DDrawState(){
 }
 
 void SpriteBatch::Draw(const Texture2D *texture, RectangleF rect, Color color) throw(InvalidOperationException *){
-
-    Vector4 fColor = color.toVector4();
-
     if(!begin) throw new InvalidOperationException(Exception_MSG(Draw_MSG));
     
-    // Bind the texture to which subsequent calls refer to
+    Vector4 fColor = color.toVector4();
     glBindTexture(GL_TEXTURE_2D, texture->pointer);
-
+    
     glBegin(GL_QUADS);
         //Bottom-left vertex (corner)
         glColor4f(fColor.X,fColor.Y,fColor.Z, fColor.W);
@@ -43,17 +50,70 @@ void SpriteBatch::Draw(const Texture2D *texture, RectangleF rect, Color color) t
 
         //Bottom-right vertex (corner)
         glTexCoord2i(1, 0);
-        glVertex3f(rect.X + rect.width, rect.Y, 0.f);
+        glVertex3f(rect.X + rect.width, rect.Y, 0.0f);
 
         //Top-right vertex (corner)
         glTexCoord2i(1, 1);
-        glVertex3f(rect.X + rect.width, rect.Y + rect.height, 0.f);
+        glVertex3f(rect.X + rect.width, rect.Y + rect.height, 0.0f);
 
         //Top-left vertex (corner)
         glTexCoord2i(0, 1);
-        glVertex3f(rect.X, rect.Y + rect.height, 0.f);
+        glVertex3f(rect.X, rect.Y + rect.height, 0.0f);
     glEnd();
 }
+
+
+
+
+void SpriteBatch::DrawFullScreen(const Texture2D *texture, Color color) throw(InvalidOperationException *){
+    if(!begin) throw new InvalidOperationException(Exception_MSG(Draw_MSG));
+    
+    src.SetValue(texture);
+    effect->Begin();
+    this->color.SetValue(&color);
+    
+    glBegin(GL_QUADS);
+        glTexCoord2i(0, 1);
+        glVertex2f(-1, -1);
+        
+        glTexCoord2i(1, 1);
+        glVertex2f(1, -1);
+        
+        glTexCoord2i(1, 0);
+        glVertex2f(1, 1);
+        
+        glTexCoord2i(0, 0);
+        glVertex2f(-1, 1);
+    glEnd();
+    
+    effect->End();
+}
+
+void SpriteBatch::DrawFullScreen(Effect *effect) throw(InvalidOperationException *){
+    if(!begin) throw new InvalidOperationException(Exception_MSG(Draw_MSG));
+    
+    effect->Begin();
+    
+    glBegin(GL_QUADS);
+        glTexCoord2i(0, 1);
+        glVertex2i(-1, -1);
+        
+        glTexCoord2i(1, 1);
+        glVertex2i(1, -1);
+        
+        glTexCoord2i(1, 0);
+        glVertex2i(1, 1);
+        
+        glTexCoord2i(0, 0);
+        glVertex2i(-1, 1);
+    glEnd();
+    
+    effect->End();
+}
+
+
+
+
 
 void SpriteBatch::Draw(const Texture2D *texture, RectangleF rect,
                                                     float ang, Vector2 center, Color color) throw(InvalidOperationException *){
@@ -65,9 +125,7 @@ void SpriteBatch::Draw(const Texture2D *texture, RectangleF rect,
 
     center.X += rect.X;
     center.Y += rect.Y;
-
-
-    // Bind the texture to which subsequent calls refer to
+    
     glBindTexture(GL_TEXTURE_2D, texture->pointer);
 
     glBegin(GL_QUADS);
@@ -229,76 +287,6 @@ void SpriteBatch::End() throw(InvalidOperationException *){
         graphicDevice->setBlendState(SavedBlendState);
     }
 }
-
-// <editor-fold defaultstate="collapsed" desc="Deprecated:">
-/*Texture2D *SpriteBatch::LoadTexture2D(char *path) {
-    Texture2D *result;
-    GLuint texture; // This is a handle to our texture object
-    SDL_Surface *surface; // This surface will tell us the details of the image
-    SurfaceFormat texture_format;
-    GLint nOfColors;
-
-    if ((surface = SDL_LoadBMP(path))) {
-
-        // Check that the image's width is a power of 2
-        if ((surface->w & (surface->w - 1)) != 0) {
-            printf("warning: image.bmp's width is not a power of 2\n");
-        }
-
-        // Also check if the height is a power of 2
-        if ((surface->h & (surface->h - 1)) != 0) {
-            printf("warning: image.bmp's height is not a power of 2\n");
-        }
-
-        // get the number of channels in the SDL surface
-        nOfColors = surface->format->BytesPerPixel;
-        if (nOfColors == 4) // contains an alpha channel
-        {
-            if (surface->format->Rmask == 0x000000ff)
-                texture_format = RGBA;
-            else
-                texture_format = BGRA;
-        } else if (nOfColors == 3) // no alpha channel
-        {
-            if (surface->format->Rmask == 0x000000ff)
-                texture_format = RGB;
-            else
-                texture_format = BGR;
-        } else {
-            printf("warning: the image is not truecolor..  this will probably break\n");
-            // this error should not go unhandled
-        }
-
-        // Have OpenGL generate a texture object handle for us
-        glGenTextures(1, &texture);
-
-        // Bind the texture object
-        glBindTexture(GL_TEXTURE_2D, texture);
-
-        // Set the texture's stretching properties
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-
-        // Edit the texture object's image data using the information SDL_Surface gives us
-        glTexImage2D(GL_TEXTURE_2D, 0, nOfColors, surface->w, surface->h, 0,
-                texture_format, GL_UNSIGNED_BYTE, surface->pixels);
-    } else {
-        printf("SDL could not load image.bmp: %s\n", SDL_GetError());
-        SDL_Quit();
-        exit(1);
-    }
-
-    // Free the SDL_Surface only if it was successfully created
-    if (surface) {
-        SDL_FreeSurface(surface);
-    }
-
-    result = new Texture2D(texture, surface->w, surface->h, 0, texture_format);
-
-    return result;
-
-}*/// </editor-fold>
 
 char* SpriteBatch::Exception_MSG(ExceptionType type) const{
     switch(type){

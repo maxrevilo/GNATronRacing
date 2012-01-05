@@ -83,15 +83,15 @@ void LightCycle::Initialize(TiXmlNode* node) {
                 effect = game->Content->Load<Effect > ("Shaders/Neon2Tex.prog");
 
                 modelMixVal[i] = effect->getParameter("mixVal");
-                modelUVAdd[i] = effect->getParameter("uvAdd");
+                modelUVAdd[i]  = effect->getParameter("uvAdd");
             } else {
                 effect = game->Content->Load<Effect > ("Shaders/Neon.prog");
             }
 
             modelWVPMat[i] = effect->getParameter("rMatWorldViewProjection");
-            modelWMat[i] = effect->getParameter("rMatWorld");
+            modelWMat[i]   = effect->getParameter("rMatWorld");
             modelCamPos[i] = effect->getParameter("rCamPos");
-            modelColor[i] = effect->getParameter("Color");
+            modelColor[i]  = effect->getParameter("Color");
 
 
             sprintf(path, "Vehicles/LightCycle/%s/DIFF.bmp", name);
@@ -134,8 +134,8 @@ void LightCycle::Initialize(TiXmlNode* node) {
 
     turnAng = 0.f;
     turning = false;
-    fuel = 0.f;
-    life = 100.f * strength;
+    fuel    = 0.f;
+    life    = 100.f * strength;
     acelerating = false;
     distance = 0.f;
 
@@ -228,7 +228,7 @@ void LightCycle::Draw(GameTime gameTime, DrawOptions option) {
             for (int i = 0; i < 4; i++) {
                 Matrix wvp = Matrix::CreateScale(area[i].R) * Matrix::CreateTranslation(area[i].Center()) * posVP;
 
-                dbgEffMatCamParam.SetValue<Matrix > (&wvp);
+                dbgEffMatCamParam.SetValue<Matrix> (&wvp);
                 sphmesh.Draw();
             }
             dbgEffect->End();
@@ -278,7 +278,6 @@ void LightCycle::Draw(GameTime gameTime, DrawOptions option) {
         
         
         game->graphicDevice->setRasterizerState(RasterizerState::CullCounterClockwise);
-
     }
 }
 

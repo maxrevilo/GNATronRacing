@@ -359,6 +359,11 @@ namespace GNAFramework {
         float getAspectRatio()const { return aspectRatio; }
         float getFront()      const { return front;       }
         float getBack()       const { return back;        }
+        
+        float setFovY(float value)       { fovY = value;        }
+        float setAspectRatio(float value){ aspectRatio = value; }
+        float setFront(float value)      { front = value;       }
+        float setBack(float value)       { back = value;        }
 
     private:
         float fovY;

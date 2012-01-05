@@ -11,6 +11,7 @@
 #include <exception>
 #include "GNAExeptions.h"
 #include "SpriteFont.h"
+#include "Effect.h"
 
 
 namespace GNAFramework {
@@ -48,7 +49,12 @@ namespace GNAFramework {
          * color se debe usar blanco Color::White.
          */
         void Draw(const Texture2D *texture, RectangleF dest, Color color) throw (InvalidOperationException *);
-
+        
+        void DrawFullScreen(const Texture2D *texture, Color color) throw(InvalidOperationException *);
+        
+        void DrawFullScreen(Effect *effect) throw(InvalidOperationException *);
+        
+        
         /**
          * Dibuja una textura en pantalla en la posicion y dimenciones indicadas por
          * dest, ademas el rectangulo dibujado en pantalla es rotado segun el angulo
@@ -104,6 +110,11 @@ namespace GNAFramework {
     private:
         bool begin;
         BlendState SavedBlendState;
+        static Effect *effect;
+        static EffectParameter color;
+        static EffectParameter src;
+        
+        ViewPort savedVP;
 
         void set2DDrawState();
 

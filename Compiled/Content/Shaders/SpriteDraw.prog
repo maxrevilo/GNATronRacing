@@ -1,0 +1,18 @@
+uniform vec2 sPos, sDim, center, tPos, tDim;
+uniform float sinRo, cosRo;
+varying vec2 texCoord;
+#ifdef VERTEX
+
+void main(void)
+{
+   gl_Position = gl_Vertex;
+   texCoord = gl_MultiTexCoord0.xy;
+}
+
+#endif
+#ifdef FRAGMENT
+
+void main(void) {
+    gl_FragColor = Bloom / 3.0* brightStr;
+}
+#endif
