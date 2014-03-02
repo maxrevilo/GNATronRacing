@@ -9,15 +9,15 @@
 Scenario::Scenario(Game* game, Camera *camera) : GameActor(game) {
     meshes = NULL;
     meshes_length = 0;
-
+    
     DebugManager::debugInfo("Loading Scenario Floor.");
     floor = Floor(game);
 
     Mesh::initializeBuffers(game->graphicDevice);
-
+    
     this->camera = camera;
-
-
+    
+    
     skyMap = new Model3D(game->graphicDevice, "Content/Scenario/skymap.obj");
     Effect *effect = game->Content->Load<Effect > ("Shaders/skymap.prog");
     Texture2D *diffMap = game->Content->Load<Texture2D > ("Scenario/skymap.bmp");
@@ -31,7 +31,8 @@ Scenario::Scenario(Game* game, Camera *camera) : GameActor(game) {
     if (model->Meshes() - 1 != 6) {
         throw new GNAException("El modelo se cambio pero no se ajusto la cantidad e EffectParameter en Scenario.");
     }
-
+    
+    Texture2D *black = game->Content->Load<Texture2D> ("Scenario/Black.bmp");
     Vector2 uvScale = Vector2(1.f, 1.f);
     char path[256];
     for (int i = 0; i < model->Meshes() - 1; i++) {
@@ -41,11 +42,23 @@ Scenario::Scenario(Game* game, Camera *camera) : GameActor(game) {
 
         sprintf(path, "Scenario/%s.bmp", name);
         Texture2D *diffMap = game->Content->Load<Texture2D > (path);
-
+        
         modelWVPMat[i] = effect->getParameter("rMatWorldViewProjection");
         effect->getParameter("diffMap").SetValue<Texture2D > (diffMap);
         effect->getParameter("uvScale").SetValue<Vector2 > (&uvScale);
-
+        
+        Texture2D *lumMap;
+        if (strcmp((*model)[i]->Name, "Luces") == 0) {
+            lumMap = game->Content->Load<Texture2D>("Scenario/Luces.bmp");
+        } else if (strcmp((*model)[i]->Name, "MarcaAzul") == 0) {
+            lumMap = game->Content->Load<Texture2D>("Scenario/Lum_MarcaAzul.bmp");
+        } else if (strcmp((*model)[i]->Name, "Marcador") == 0) {
+            lumMap = game->Content->Load<Texture2D>("Scenario/Lum_Marcador.bmp");
+        } else {
+            lumMap = black;
+        }
+        effect->getParameter("lumMap").SetValue(lumMap);
+        
         (*model)[i]->effect = effect;
     }
 }
@@ -320,7 +333,7 @@ Scenario::Mesh::Mesh(TiXmlNode* node, ContentManager *cm) {
 
         DebugManager::debugInfo("    Loading heightmap texture.");
         heightMap = cm->Load<Texture2D > (path);
-        heightMap->UseMipMap(false);
+        heightMap->MaxFiltering(TextureFilteringMode::Nearest);
 
         if (!DataManager::useShaderHeightmap) {
             VertexElement *ves = new VertexElement[1];
@@ -422,7 +435,7 @@ struct VertNormTexInd {
 
 Scenario::Floor::Floor(Game* game) {
     Texture2D *diffMap = game->Content->Load<Texture2D > ("Scenario/Floor.bmp");
-    effect = game->Content->Load<Effect > ("Shaders/scenario.prog");
+    effect = game->Content->Load<Effect > ("Shaders/Floor.prog");
 
 
     effect->Begin();

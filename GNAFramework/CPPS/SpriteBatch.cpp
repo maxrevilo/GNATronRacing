@@ -111,6 +111,30 @@ void SpriteBatch::DrawFullScreen(Effect *effect) throw(InvalidOperationException
     effect->End();
 }
 
+void SpriteBatch::DrawFullScreenYInv(const Texture2D *texture, Color color) throw(InvalidOperationException *){
+    if(!begin) throw new InvalidOperationException(Exception_MSG(Draw_MSG));
+    
+    src.SetValue(texture);
+    effect->Begin();
+    this->color.SetValue(&color);
+    
+    glBegin(GL_QUADS);
+        glTexCoord2i(0, 0);
+        glVertex2f(-1, -1);
+        
+        glTexCoord2i(1, 0);
+        glVertex2f(1, -1);
+        
+        glTexCoord2i(1, 1);
+        glVertex2f(1, 1);
+        
+        glTexCoord2i(0, 1);
+        glVertex2f(-1, 1);
+    glEnd();
+    
+    effect->End();
+}
+
 
 
 

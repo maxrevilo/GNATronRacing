@@ -10,7 +10,7 @@
     
     <!-- Warning: Set verbose to "true" will increase the output file's weight
          while the game run. -->
-    <debuger verbose="false" />
+    <debuger verbose="true" />
     
     <graphics>
         <shaderheightmap active="true" />

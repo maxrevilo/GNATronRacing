@@ -1,5 +1,6 @@
 #include "../RenderTarget2D.h"
 #include "AdaptacionesDeFunciones.h"
+#include <limits.h>
 
 using namespace GNAFramework;
 
@@ -15,10 +16,17 @@ RenderTarget2D::RenderTarget2D(
                 )
 : Texture2D(graphicsDevice, width, height, mipMap, preferredFormat)
 {
-    glGenRenderbuffersEXT(1, &deepBuffer);
-    glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, deepBuffer);
-    glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT, width, height);
-    glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
+    deepBuffer = INT_MAX;
+}
+
+unsigned int RenderTarget2D::depthBufferPointer() {
+    if(deepBuffer == INT_MAX) {
+        glGenRenderbuffersEXT(1, &deepBuffer);
+        glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, deepBuffer);
+        glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT, getWidth(), getHeight());
+        glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
+    }
+    return deepBuffer;
 }
 
 void RenderTarget2D::GenerateMipMaps() {

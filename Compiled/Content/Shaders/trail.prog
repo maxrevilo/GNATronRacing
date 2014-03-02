@@ -26,7 +26,9 @@ uniform sampler2D diffMap;
 
 void main( void )
 {
-   gl_FragColor = texture2D( diffMap, Texcoord) * color;
+   vec4 finalColor = texture2D( diffMap, Texcoord) * color;
+   gl_FragData[0] = finalColor;
+   gl_FragData[1] = finalColor * 0.3;
 }
 
 #endif

@@ -55,6 +55,7 @@ PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXTPROC glGetFramebufferAttachmentParame
 PFNGLGENERATEMIPMAPEXTPROC                      glGenerateMipmapEXT          = NULL;             // FBO automatic mipmap generation procedure
 PFNGLFRAMEBUFFERTEXTURE2DEXTPROC                glFramebufferTexture2DEXT    = NULL;             // FBO texdture attachement procedure
 PFNGLFRAMEBUFFERRENDERBUFFEREXTPROC             glFramebufferRenderbufferEXT = NULL;             // FBO renderbuffer attachement procedure
+PFNGLDRAWBUFFERSPROC                            glDrawBuffers                = NULL;
 // Renderbuffer object
 PFNGLGENRENDERBUFFERSEXTPROC                    glGenRenderbuffersEXT        = NULL;             // renderbuffer generation procedure
 PFNGLDELETERENDERBUFFERSEXTPROC                 glDeleteRenderbuffersEXT = NULL;                 // renderbuffer deletion procedure
@@ -255,6 +256,7 @@ static bool setupBufferEXT(char *error, char * extensionList) {
     glIsRenderbufferEXT                      = (PFNGLISRENDERBUFFEREXTPROC)          SDL_GL_GetProcAddress("glIsRenderbufferEXT");
     glGetRenderbufferParameterivEXT          = (PFNGLGETRENDERBUFFERPARAMETERIVEXTPROC) SDL_GL_GetProcAddress("glGetRenderbufferParameterivEXT");
 #endif
+    glDrawBuffers = (PFNGLDRAWBUFFERSPROC) SDL_GL_GetProcAddress("glDrawBuffers");
     
     if (true
             //Simple Buffers:
@@ -272,6 +274,7 @@ static bool setupBufferEXT(char *error, char * extensionList) {
             && glGenerateMipmapEXT
             && glFramebufferTexture2DEXT
             && glFramebufferRenderbufferEXT
+            && glDrawBuffers
             
             //Render Buffers:
             && glGenRenderbuffersEXT

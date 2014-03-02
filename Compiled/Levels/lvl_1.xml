@@ -1,11 +1,11 @@
 <?xml version="1.0" ?>
 <level name="Nivel 1" title="Training">
     <!-- Units expressed on 1 = 2 lightCycles -->
-    <scenario width="12" height="20">
+    <scenario width="80" height="80">
         
-        <meshes length="3">
+        <meshes length="4">
             <mesh width="1.0" height="1.0">
-                <position  x="7.0" y="5.0"           />
+                <position  x="47.0" y="43.0"         />
                 <dimension x="1.0" y="1.0" z="0.3"   />
                 <!-- Paths relative to Content/ folder -->
                 <heightmap path="Heightmaps/hm1.bmp" />
@@ -13,14 +13,21 @@
             </mesh>
             
             <mesh>
-                <position  x="0.0" y="10.0"          />
+                <position  x="40.0" y="42.0"         />
+                <dimension x="12.0" y="0.5" z="0.2"  />
+                <heightmap path="Heightmaps/hm3.bmp" />
+                <colormap  path="Heightmaps/cm3.bmp" />
+            </mesh>
+
+            <mesh>
+                <position  x="40.0" y="38.0"         />
                 <dimension x="12.0" y="0.5" z="0.2"  />
                 <heightmap path="Heightmaps/hm3.bmp" />
                 <colormap  path="Heightmaps/cm3.bmp" />
             </mesh>
 			
 			<mesh>
-                <position  x="5.0" y="15.0"          />
+                <position  x="43.0" y="37.0"         />
                 <dimension x="1.0" y="1.0" z="0.5"   />
                 <heightmap path="Heightmaps/hm2.bmp" />
                 <colormap  path="Heightmaps/cm2.bmp" />
@@ -29,47 +36,108 @@
         
     </scenario>
     
-    
-    <exit_position x="5.0" y="19.5" />
-    
+    <exit_position  x="51.0" y="40.5" />
+
     <player strength="1.0">
-        <position  x="2.0" y="2.0" z="0.0" />
-        <direction x="1.0" y="1.0" z="0.0" />
+        <position  x="40.0" y="40.5" z="0.0" />
+        <direction x="1.0" y="0.0" z="0.0" />
         <color     x="1.0" y="1.0" z="1.0" />
     </player>
     
     <!--Maximun 16 enemies -->
     <enemys>
+        <!-- "Ally" one -->
         <enemy>
-            <position  x="5.0" y="5.0" z="0.0" />
+            <position  x="40.4" y="40.65" z="0.0" />
             <direction x="1.0" y="0.0" z="0.0" />
+            <color     x="0.0" y="0.8" z="1.0"/>
+            
+            <patrol length="3">
+                <p x="44.0" y="40.65"/>
+                <p x="30.0" y="50.0"/>
+                <p x="40.1" y="40.65"/>
+            </patrol>
+        </enemy>
+
+        <!-- "Ally" two -->
+        <enemy>
+            <position  x="40.4" y="40.35" z="0.0" />
+            <direction x="1.0" y="0.0" z="0.0" />
+            <color     x="0.0" y="0.8" z="1.0"/>
+            
+            <patrol length="3">
+                <p x="44.0" y="40.35"/>
+                <p x="30.0" y="30.0"/>
+                <p x="40.1" y="40.35"/>
+            </patrol>
+        </enemy>
+
+
+
+        <!-- Clu -->
+        <enemy>
+            <position  x="49.0" y="40.5" z="0.0" />
+            <direction x="-1.0" y="0.0" z="0.0" />
             <color     x="1.0" y="0.64" z="0.0"/>
             
-            <patrol length="3">
-                <p x="7.0" y="0.0"/>
-                <p x="5.0" y="1.0"/>
-                <p x="1.0" y="5.0"/>
+            <patrol length="2">
+                <p x="40.0" y="40.5"/>
+                <p x="49.0" y="40.5"/>
             </patrol>
         </enemy>
-		
-		<enemy>
-            <position  x="0.0" y="0.0" z="0.0" />
-            <direction x="1.0" y="0.0" z="0.0" />
-            <color     x="0.0" y="1.0" z="0.0"/>
+
+        <!-- Enemy one -->
+        <enemy>
+            <position  x="50.0" y="40.65" z="0.0" />
+            <direction x="-1.0" y="0.0" z="0.0" />
+            <color     x="1.0" y="0.4" z="0.0"/>
             
             <patrol length="3">
-                <p x="1.0" y="0.0"/>
-                <p x="10.0" y="1.0"/>
-                <p x="10.0" y="15.0"/>
-				<p x="1.0" y="15.0"/>
+                <p x="45.5" y="40.65"/>
+                <p x="31.0" y="50.0"/>
+                <p x="40.1" y="40.65"/>
             </patrol>
         </enemy>
-        
-        <enemy strength="1.0">
-            <position  x="10.0" y="9.0" z="0.0" />
-            <direction x="0.0" y="1.0" z="0.0" />
-            <color     x="1.0" y="0.4" z="0.0" />
+
+        <!-- Enemy one.two -->
+        <enemy>
+            <position  x="50.0" y="40.8" z="0.0" />
+            <direction x="-1.0" y="0.0" z="0.0" />
+            <color     x="1.0" y="0.4" z="0.0"/>
+            
+            <patrol length="3">
+                <p x="45.5" y="40.8"/>
+                <p x="32.0" y="50.0"/>
+                <p x="40.1" y="40.8"/>
+            </patrol>
         </enemy>
+
+        <!-- Enemy two -->
+        <enemy>
+            <position  x="50.0" y="40.35" z="0.0" />
+            <direction x="-1.0" y="0.0" z="0.0" />
+            <color     x="1.0" y="0.4" z="0.0"/>
+            
+            <patrol length="3">
+                <p x="45.5" y="40.35"/>
+                <p x="31.0" y="30.0"/>
+                <p x="40.1" y="40.35"/>
+            </patrol>
+        </enemy>
+
+        <!-- Enemy two.two -->
+        <enemy>
+            <position  x="50.0" y="40.2" z="0.0" />
+            <direction x="-1.0" y="0.0" z="0.0" />
+            <color     x="1.0" y="0.4" z="0.0"/>
+            
+            <patrol length="3">
+                <p x="45.5" y="40.2"/>
+                <p x="30.0" y="30.0"/>
+                <p x="40.1" y="40.2"/>
+            </patrol>
+        </enemy>
+
     </enemys>
     
     <!-- Fireworks -->

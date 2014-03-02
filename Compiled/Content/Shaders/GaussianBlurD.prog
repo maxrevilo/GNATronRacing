@@ -1,7 +1,4 @@
 //    PARAMETERS:
-uniform float     minGasussStr;
-uniform sampler2D gaussFun;
-
 uniform float     texScale;
 uniform float     samples;
 uniform sampler2D source;
@@ -28,24 +25,34 @@ void main(void)
 
 // Fragment Shader:
 #ifdef FRAGMENT
+const float pi = 3.14159265;
+const float sigma = 5.5;
 
 void main(void) {
-   vec4 color = vec4(0.0);
-   int i;
-   
-   float base = -floor(samples / 2.0);
-   float str;
-   
-   for(i = 0; i < samples; i++) {
-      str    = texture2D(gaussFun, vec2( i / (samples - 1.0), 0.0)).r + minGasussStr;
-      color += texture2DLod(source, texCoord + dir * (i + base) * texScale * pow(2.0, level), level) * str;
-   }
-   
-   color = color / samples;
-   
-   color.a = 1.0;
-   
-   gl_FragColor = color;
+    vec3 incrementalGaussian;
+    incrementalGaussian.x = 1.0 / (sqrt(2.0 * pi) * sigma);
+    incrementalGaussian.y = exp(-0.5 / (sigma * sigma));
+    incrementalGaussian.z = incrementalGaussian.y * incrementalGaussian.y;
+    
+    float lod          = level + 1.0;
+    vec2  displacement = texScale * dir * pow(2.0, level);
+    
+    // Central Pixel:
+    vec4 avgValue           = texture2DLod(source, texCoord, lod) * incrementalGaussian.x;
+    float coefficientSum    = incrementalGaussian.x;
+    incrementalGaussian.xy *= incrementalGaussian.yz;
+    
+    float numBlurPixelsPerSide = samples / 2.0;
+    // Simple bloom pixels:
+    for (float i = 1.0; i <= numBlurPixelsPerSide; i++) { 
+        avgValue += texture2DLod(source, texCoord - i * displacement, lod) * incrementalGaussian.x;
+        avgValue += texture2DLod(source, texCoord + i * displacement, lod) * incrementalGaussian.x;         
+        
+        coefficientSum         += 2.0 * incrementalGaussian.x;
+        incrementalGaussian.xy *= incrementalGaussian.yz;
+    }
+    
+    gl_FragColor = 2.0 * avgValue / coefficientSum;
 }
 
 #endif

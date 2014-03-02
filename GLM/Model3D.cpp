@@ -146,6 +146,7 @@ Model3D::Model3D(GraphicDevice *graphicDevice, const char *path, bool keepInfo) 
             delete [] rvb;
             
             printf("Name '%s' v: %d,  i: %d\n", mesh->Name, mesh->vertices, mesh->indices);
+            fflush(stdout);
         }
     }
 }
@@ -195,9 +196,9 @@ Model3D::Mesh::Mesh(char const *name, GraphicDevice *graphicDevice) {
 void Model3D::Mesh::Draw(GraphicDevice::PrimitiveType pt) {
     if(graphicDevice == NULL)
         throw new InvalidOperationException("This mesh can't be draw because is not initialized.");
-    
+
     if(effect != NULL) effect->Begin();
-    
+
     graphicDevice->setIndices(ibo);
     graphicDevice->setVertexBuffer(vbo);
     graphicDevice->DrawIndexedPrimitives(pt, 0, vertices, indices);

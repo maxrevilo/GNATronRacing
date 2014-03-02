@@ -19,7 +19,6 @@ namespace GNAFramework {
             void SetValue(const T *value);
             
             EffectParameter();
-            EffectParameter(const EffectParameter& orig);
             
             virtual ~EffectParameter();
         private:
@@ -30,7 +29,7 @@ namespace GNAFramework {
             
             int texturePosition;
             Effect *effect;
-            char *name;
+            char name[32];
             GLint location;
     };
 }

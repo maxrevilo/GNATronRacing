@@ -1,31 +1,32 @@
-//Varyings: 
-//Coordenadas U,V del objeto:
+// Textura de color del objeto:
+uniform sampler2D diffMap;
+// uniform mat4 rMatView;
+uniform mat4 rMatWorldViewProjection;
+// Escala de las coordenadas UV:
+uniform vec2 uvScale;
+// Texture of Luminance of the Object:
+uniform sampler2D lumMap;
+
+// Varyings: 
+// Coordenadas U,V del objeto:
 varying vec2 Texcoord;
 
-//Vertex Shader:
+// Vertex Shader:
 #ifdef VERTEX
-//uniform mat4 rMatView;
-uniform mat4 rMatWorldViewProjection;
-
-//Escala de las coordenadas UV:
-uniform vec2 uvScale;
-   
 void main( void )
 {
    gl_Position = rMatWorldViewProjection * gl_Vertex;
    Texcoord    = gl_MultiTexCoord0.xy * uvScale;
 }
-
 #endif
 
-//Fragment Shader:
+// Fragment Shader:
 #ifdef FRAGMENT
-//Textura de color del objeto:
-uniform sampler2D diffMap;
 
 void main( void )
 {
-   gl_FragColor = texture2D( diffMap, Texcoord );
+   gl_FragData[0] = texture2D( diffMap, Texcoord );
+   gl_FragData[1] = texture2D( lumMap, Texcoord );
 }
 
 #endif

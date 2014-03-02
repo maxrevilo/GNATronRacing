@@ -75,6 +75,8 @@ void Game::Start() {
     } catch (GNAException e) {
         catchGNAException(&e);
     }
+    
+    GraphicDevice::checkError("Game Loop Error Check");
 }
 
 void Game::Initialize() {

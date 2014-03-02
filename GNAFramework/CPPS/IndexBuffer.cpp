@@ -25,6 +25,9 @@ IndexBuffer::IndexBuffer (
     this->indexCount       = indexCount;
     this->usage            = usage;
     glGenBuffersARB(1, &this->pointer);
+    if(this->pointer == 0) {
+        throw new GNAException("Error creating Index Buffer");
+    }
 }
 
 
@@ -47,6 +50,7 @@ namespace GNAFramework {
         glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER, pointer);
         //printf("glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER, %d, data, GL_STATIC_DRAW);\n", elementCount*elementSize(indexElementSize));
         glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER, elementCount*elementSize(indexElementSize), data, GL_STATIC_DRAW);
+        glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
     
     template <>
@@ -54,6 +58,7 @@ namespace GNAFramework {
         glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER, pointer);
         
         glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER, elementCount*elementSize(indexElementSize), data, GL_STATIC_DRAW);
+        glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 }
 

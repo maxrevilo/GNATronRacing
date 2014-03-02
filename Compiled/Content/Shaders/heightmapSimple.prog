@@ -42,16 +42,17 @@ uniform sampler2D colorMap;
 
 void main( void )
 {
-   //Normal en coordenadas Locales:
-   //vec3 nNormal      = normalize(normal);
-   //vec3 nCamDir      = normalize(camDir);
-   //vec3 reflectedEye = reflect(nCamDir, nNormal);
+   // Normal en coordenadas Locales:
+   // vec3 nNormal      = normalize(normal);
+   // vec3 nCamDir      = normalize(camDir);
+   // vec3 reflectedEye = reflect(nCamDir, nNormal);
    
    //Color del objeto en este pixel:
-   vec4  fvBaseColor      = texture2DLod( colorMap, Texcoord, 0 );
+   vec4  fvBaseColor      = texture2D( colorMap, Texcoord);
    fvBaseColor.a = 1.0;
    
-   gl_FragColor = fvBaseColor;
+   gl_FragData[0] = fvBaseColor;
+   gl_FragData[1] = vec4(0.0);
 }
 
 #endif

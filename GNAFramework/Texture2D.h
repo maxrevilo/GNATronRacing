@@ -16,10 +16,10 @@ namespace GNAFramework {
     };
     
     enum TextureFilteringMode {
-        Nearest,
-        Linear,
-        Bilinear,
-        Trilinear
+        Nearest = 0,
+        Linear = 1,
+        Bilinear = 2,
+        Trilinear = 3
     };
 
     class Texture2D : public Texture {

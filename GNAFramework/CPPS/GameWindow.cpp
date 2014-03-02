@@ -14,7 +14,7 @@ GameWindow::GameWindow(int width, int height, char *tittle, char *icon_Path) {
         printf("SDL could not load the Icon image: %s\n", SDL_GetError());
     }
     
-    screen = SDL_SetVideoMode(width, height, 0, SDL_HWSURFACE | SDL_GL_DOUBLEBUFFER | SDL_OPENGL | SDL_FULLSCREEN);
+    screen = SDL_SetVideoMode(width, height, 0, SDL_HWSURFACE | SDL_GL_DOUBLEBUFFER | SDL_OPENGL);// | SDL_FULLSCREEN);
     
     if(!screen){
         printf("Unable to initialize OpenGL: %s\n", SDL_GetError());

@@ -20,7 +20,7 @@ namespace GNAFramework {
             PreserveContents,
             PlatformContents
         };
-
+        
         RenderTarget2D(
                 GraphicDevice *graphicsDevice,
                 int width,
@@ -31,11 +31,10 @@ namespace GNAFramework {
                 int preferredMultiSampleCount,
                 RenderTargetUsage usage
                 );
-        
-        unsigned int deepBufferPointer() const { return deepBuffer; }
-        
         void GenerateMipMaps();
 
+        unsigned int depthBufferPointer();
+        
         virtual ~RenderTarget2D();
     private:
         unsigned int deepBuffer;

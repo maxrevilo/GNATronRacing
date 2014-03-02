@@ -71,7 +71,10 @@ void LightCycle::Initialize(TiXmlNode* node) {
         if (model->Meshes() - 1 != MESHES) {
             throw new GNAException("El modelo se cambio pero no se ajusto la cantidad e EffectParameter en LightCycle.");
         }
-
+        
+        Texture2D *black = new Texture2D(game->graphicDevice, 1,1);
+        black->setData<Color>(&Color::Black);
+        
         char path[256];
         bool N2T;
         for (int i = 0; i < model->Meshes() - 1; i++) {
@@ -99,7 +102,19 @@ void LightCycle::Initialize(TiXmlNode* node) {
 
             sprintf(path, "Vehicles/LightCycle/%s/EMSS.bmp", name);
             Texture2D *emssMap = game->Content->Load<Texture2D > (path);
-
+            
+            Texture2D *lummMap;
+            
+            if(strcmp(name, "Body") == 0) {
+                lummMap = game->Content->Load<Texture2D > ("Vehicles/LightCycle/Body/LUMM.bmp");
+                lummMap->MinFiltering(Nearest);
+                lummMap->MaxFiltering(Nearest);
+                lummMap->UseMipMap(false);
+            } else {
+                lummMap = black;
+            }
+            
+            
             Vector4 color;
             float val = 8.f;
             color = Vector4(0.1f, 0.1f, 0.1f, 1.f);
@@ -113,6 +128,7 @@ void LightCycle::Initialize(TiXmlNode* node) {
 
             effect->getParameter("diffMap").SetValue(diffMap);
             effect->getParameter("emssMap").SetValue(emssMap);
+            effect->getParameter("lummMap").SetValue(lummMap);
 
             (*model)[i]->effect = effect;
         }
@@ -249,19 +265,16 @@ void LightCycle::Draw(GameTime gameTime, DrawOptions option) {
 
         Matrix World = reorient * rotation * Matrix::CreateTranslation(pos);
         Matrix WVP = World * camera->viewMatrix() * camera->projectionMatrix();
-        
         Vector3 pos = camera->getPosition();
         
         bool N2T;
         for (int i = 0; i < model->Meshes() - 1; i++) {
             const char *name = (*model)[i]->Name;
             N2T = strcmp(name, "Tire") == 0 || strcmp(name, "Engine") == 0;
-
             if (N2T) {
                 modelMixVal[i].SetValue(&mixVal);
                 modelUVAdd[i].SetValue(&uvAdd);
             }
-            
             modelWVPMat[i].SetValue(&WVP);
             modelWMat[i].SetValue(&World);
             modelCamPos[i].SetValue(&pos);

@@ -54,6 +54,7 @@ namespace GNAFramework {
         
         void DrawFullScreen(Effect *effect) throw(InvalidOperationException *);
         
+        void DrawFullScreenYInv(const Texture2D *texture, Color color) throw(InvalidOperationException *);
         
         /**
          * Dibuja una textura en pantalla en la posicion y dimenciones indicadas por

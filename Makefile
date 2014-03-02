@@ -2,7 +2,7 @@ CC = g++
 
 EXECUTABLE = Compiled/juego
 
-LIBS       = -lmingw32 -lopengl32 -lSDLmain -lSDL -lSDL_ttf  -Dmain=SDLmain -mwindows
+LIBS       = -lmingw32 -lopengl32 -lglu32 -lSDLmain -lSDL -lSDL_ttf  -Dmain=SDLmain -mwindows
 
 CFLAGS     = -std=c++0x
 

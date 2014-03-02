@@ -18,7 +18,7 @@ namespace GNAFramework {
         this->format = format;
         this->graphicDevice = graphicsDevice;
         int bpp = ((format == RGBA) || (format == BGRA)) ? 4 : 3;
-
+        
         // Have OpenGL generate a texture object handle for us
         glGenTextures(1, &pointer);
 
@@ -26,18 +26,16 @@ namespace GNAFramework {
         glActiveTextureARB(GL_TEXTURE0_ARB);
 
         glBindTexture(GL_TEXTURE_2D, pointer);
-
+        
         glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-
-        UseMipMap(mipMap);
-        MaxFiltering(Bilinear);
+        
+        MaxFiltering(Linear);
         MinFiltering(Trilinear);
         
-        
         setSamplerAddressUV(Wrap);
-
-
-        // Edit the texture object's image data using the information SDL_Surface gives us
+        
+        UseMipMap(mipMap);
+        
         glTexImage2D(GL_TEXTURE_2D, 0, bpp, width, height, 0, format, GL_UNSIGNED_BYTE, NULL);
     }
 
@@ -76,9 +74,12 @@ namespace GNAFramework {
     static GLuint filteringModes[4] = {GL_NEAREST, GL_LINEAR, GL_LINEAR_MIPMAP_NEAREST, GL_LINEAR_MIPMAP_LINEAR};
 
     void Texture2D::MaxFiltering(TextureFilteringMode mode) {
+        if((unsigned int)mode > 1) 
+            throw new ArgumentOutOfRangeException("MaxFiltering olny accpets Nearest or Linear.");
+        
         glActiveTextureARB(GL_TEXTURE0_ARB);
         glBindTexture(GL_TEXTURE_2D, pointer);
-
+        
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filteringModes[mode]);
     }
 

@@ -1,7 +1,7 @@
 //    PARAMETERS:
 uniform mat4 rMatWorldViewProjection;
 uniform mat4 rMatWorld;
-uniform vec4 rCamPos;
+uniform vec3 rCamPos;
 
 uniform vec4  Ambient;
 uniform float SpecPow;
@@ -19,7 +19,7 @@ uniform vec4 rPLuz0Col;
 
 
 //Texturas
-uniform sampler2D diffMap, emssMap; //, normalMap, specMap;
+uniform sampler2D diffMap, emssMap, lummMap; //, normalMap, specMap;
 
 
 
@@ -43,10 +43,9 @@ void main( void )
    vec4 objPos = rMatWorld * gl_Vertex;
    
    
+   normal = (mat3(rMatWorld) * gl_Normal).xyz; // gl_Normal.xyz;
    
-   normal =  (mat3(rMatWorld) * gl_Normal).xyz;
-   
-   camDir = rCamPos.xyz - objPos.xyz;
+   camDir = rCamPos - objPos.xyz;
    
    
    pluz0Dir   = rPLuz0Pos   - objPos.xyz;
@@ -67,29 +66,30 @@ void main( void )
    vec3  nNormal          = normalize(normal);
 
    vec3  nPLuz0Dir        = normalize( pluz0Dir );
-   //vec3  nDLuz0Dir        = normalize( rDLuz0Dir );
+   // vec3  nDLuz0Dir        = normalize( rDLuz0Dir );
    float NDotLP0          = max(0.0, dot( nNormal, nPLuz0Dir )  );
-   //float NDotL0           = max(0.0, dot( nNormal, nLuz0Dir ) );
+   // float NDotL0           = max(0.0, dot( nNormal, nLuz0Dir ) );
    
    
    vec3  reflectionP0     = -reflect(nPLuz0Dir, nNormal);
-   //vec3  reflectionD0     = -reflect(nLuz0Dir, nNormal);
+   // vec3  reflectionD0     = -reflect(nLuz0Dir, nNormal);
    vec3  nCamDir          = normalize( camDir );
    float RP0DotC          = max( 0.0, dot( reflectionP0, nCamDir ) );
-   //float R0DotC           = max( 0.0, dot( reflection0, nCamDir ) );
+   // float R0DotC           = max( 0.0, dot( reflection0, nCamDir ) );
    
    if(dot(nNormal, nPLuz0Dir ) <= 0.0) RP0DotC  = 0.0;
    //if(dot(nNormal, nLuz0Dir) <= 0.0) R0DotC = 0.0;
    
-   vec4  Diffuse      = mix(texture2D   (diffMap, Texcoord2   ), texture2D   (diffMap, Texcoord), mixVal);
+   vec4  Diffuse      = mix(texture2D(diffMap, Texcoord2), texture2D(diffMap, Texcoord), mixVal);
    vec4  Emissive     = mix(texture2D(emssMap, Texcoord2), texture2D(emssMap, Texcoord), mixVal);
+   vec4  Luminance    = mix(texture2D(lummMap, Texcoord2), texture2D(lummMap, Texcoord), mixVal);
    
    vec4  fvTotalAmbient   = Ambient * Diffuse + Emissive * Color; 
    vec4  fvTotalDiffuse   = (rPLuz0Col * NDotLP0) * Diffuse; 
    vec4  fvTotalSpecular  = vec4(1.0)*pow( RP0DotC, SpecPow );
   
-   gl_FragColor = (fvTotalAmbient + fvTotalDiffuse + fvTotalSpecular);
-   
+   gl_FragData[0] = (fvTotalAmbient + fvTotalDiffuse + fvTotalSpecular);
+   gl_FragData[1] = Emissive * Color * 0.6 + Luminance;
 }
 
 #endif

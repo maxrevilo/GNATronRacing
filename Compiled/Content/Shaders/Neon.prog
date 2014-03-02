@@ -1,23 +1,23 @@
 //    PARAMETERS:
 uniform mat4 rMatWorldViewProjection;
 uniform mat4 rMatWorld;
-uniform vec4 rCamPos;
+uniform vec3 rCamPos;
 
 uniform vec4  Ambient;
 uniform float SpecPow;
 uniform vec4  Color;
 
 
-//Luces
+// Luces
 uniform vec3 rPLuz0Pos;
 uniform vec4 rPLuz0Col;
 
-//uniform vec3 rDLuz0Dir;
-//uniform vec4 rDLuz0Col;
+// uniform vec3 rDLuz0Dir;
+// uniform vec4 rDLuz0Col;
 
 
-//Texturas
-uniform sampler2D diffMap, emssMap; //, normalMap, specMap;
+// Texturas
+uniform sampler2D diffMap, emssMap, lummMap; //, normalMap, specMap;
 
 
 
@@ -28,7 +28,7 @@ varying vec3 normal;
 varying vec3 camDir;
 varying vec3 pluz0Dir;
 
-//Vertex Shader:
+// Vertex Shader:
 #ifdef VERTEX
    
 void main( void )
@@ -40,9 +40,9 @@ void main( void )
    
    
    
-   normal =  (mat3(rMatWorld) * gl_Normal).xyz;
+   normal =  (mat3(rMatWorld) * gl_Normal).xyz; // gl_Normal.xyz;
    
-   camDir = rCamPos.xyz - objPos.xyz;
+   camDir = rCamPos - objPos.xyz;
    
    
    pluz0Dir   = rPLuz0Pos   - objPos.xyz;
@@ -50,7 +50,7 @@ void main( void )
 
 #endif
 
-//Fragment Shader:
+// Fragment Shader:
 #ifdef FRAGMENT
 
 void main( void )
@@ -63,32 +63,35 @@ void main( void )
    vec3  nNormal          = normalize(normal);
 
    vec3  nPLuz0Dir        = normalize( pluz0Dir );
-   //vec3  nDLuz0Dir        = normalize( rDLuz0Dir );
+   // vec3  nDLuz0Dir        = normalize( rDLuz0Dir );
    float NDotLP0          = max(0.0, dot( nNormal, nPLuz0Dir )  );
-   //float NDotL0           = max(0.0, dot( nNormal, nLuz0Dir ) );
+   // float NDotL0           = max(0.0, dot( nNormal, nLuz0Dir ) );
    
    
    vec3  reflectionP0     = -reflect(nPLuz0Dir, nNormal);
-   //vec3  reflectionD0     = -reflect(nLuz0Dir, nNormal);
+   // vec3  reflectionD0     = -reflect(nLuz0Dir, nNormal);
    vec3  nCamDir          = normalize( camDir );
    float RP0DotC          = max( 0.0, dot( reflectionP0, nCamDir ) );
-   //float R0DotC           = max( 0.0, dot( reflection0, nCamDir ) );
+   // float R0DotC           = max( 0.0, dot( reflection0, nCamDir ) );
    
    if(dot(nNormal, nPLuz0Dir ) <= 0.0) RP0DotC  = 0.0;
    //if(dot(nNormal, nLuz0Dir) <= 0.0) R0DotC = 0.0;
    
    vec4  Diffuse      = texture2D( diffMap, Texcoord );
    vec4  Emissive     = texture2D( emssMap, Texcoord );
+   vec4  Luminance    = texture2D( lummMap, Texcoord );
    
    vec4  fvTotalAmbient   = Ambient * Diffuse + Emissive * Color; 
    vec4  fvTotalDiffuse   = (rPLuz0Col * NDotLP0) * Diffuse; 
    vec4  fvTotalSpecular  = vec4(1.0)*pow( RP0DotC, SpecPow );
    
    vec4  final = (fvTotalAmbient + fvTotalDiffuse + fvTotalSpecular);
+   vec4  finalLum = Emissive * Color * 0.6 + Luminance;
    final.a = Diffuse.a;
+   finalLum.a = Diffuse.a;
    
-   gl_FragColor = final;
-   
+   gl_FragData[0] = final;
+   gl_FragData[1] = finalLum;
 }
 
 #endif

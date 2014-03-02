@@ -43,6 +43,7 @@
           <in>GameActor.cpp</in>
           <in>GaussianBlur.cpp</in>
           <in>LightCycle.cpp</in>
+          <in>PostProcess.cpp</in>
           <in>Scenario.cpp</in>
           <in>Trail.cpp</in>
         </df>
@@ -56,6 +57,7 @@
         <in>GaussianBlur.h</in>
         <in>LightCycle.h</in>
         <in>Plane.h</in>
+        <in>PostProcess.h</in>
         <in>Ray.h</in>
         <in>Scenario.h</in>
         <in>Sphere_mesh.h</in>

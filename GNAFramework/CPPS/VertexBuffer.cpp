@@ -24,6 +24,9 @@ VertexBuffer::VertexBuffer (
     this->VertexCount       = vertexCount;
     this->usage             = usage;
     glGenBuffersARB(1, &this->pointer);
+    if(this->pointer == 0) {
+        throw new GNAException("Error creating Vertex Buffer");
+    }
 }
         
         

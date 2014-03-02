@@ -65,6 +65,7 @@ extern PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXTPROC glGetFramebufferAttachmen
 extern PFNGLGENERATEMIPMAPEXTPROC                      glGenerateMipmapEXT;             // FBO automatic mipmap generation procedure
 extern PFNGLFRAMEBUFFERTEXTURE2DEXTPROC                glFramebufferTexture2DEXT;             // FBO texdture attachement procedure
 extern PFNGLFRAMEBUFFERRENDERBUFFEREXTPROC             glFramebufferRenderbufferEXT;             // FBO renderbuffer attachement procedure
+extern PFNGLDRAWBUFFERSPROC                            glDrawBuffers;
 // Renderbuffer object
 extern PFNGLGENRENDERBUFFERSEXTPROC                    glGenRenderbuffersEXT;             // renderbuffer generation procedure
 extern PFNGLDELETERENDERBUFFERSEXTPROC                 glDeleteRenderbuffersEXT;                 // renderbuffer deletion procedure

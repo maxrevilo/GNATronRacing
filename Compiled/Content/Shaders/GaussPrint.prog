@@ -1,6 +1,7 @@
 //    PARAMETERS:
 uniform float brightStr;
 uniform float flare;
+uniform sampler2D scene;
 uniform sampler2D b0;
 uniform sampler2D b1;
 uniform sampler2D b2;
@@ -27,20 +28,14 @@ void main(void)
 
 void main(void) {
    
-    vec4 Bloom = 
+    vec4 Bloom =
         texture2D(b0, texCoord) +
         texture2D(b1, texCoord) +
         texture2D(b2, texCoord);
-    /*
-    if(flare > 0.0) {
-        Bloom +=(
-            texture2DLod(b2, 1.4*(1.0-texCoord) - 0.15, 4.0) +
-            texture2DLod(b2, (texCoord - 0.4)* 5.0, 4.0) +
-            texture2DLod(b2, (texCoord -0.25)* 2.0, 4.0)
-            )* flare * 3.0 ;
-    }
-      */
-    gl_FragColor = Bloom / 3.0* brightStr;
+    vec4 final;
+    if(flare > 0.0) final = 0.9 * Bloom / 3.0 + texture2D(scene, texCoord);
+    else            final = Bloom / 3.0;
+    gl_FragData[0] =  final;
 }
 
 #endif

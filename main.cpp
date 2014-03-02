@@ -21,8 +21,7 @@
 #include "GameActors/Enemy.h"
 #include "GameActors/ExitPosition.h"
 #include "GameActors/DirectorCamera.h"
-#include "GameActors/AnamorphicBloom.h"
-#include "GameActors/GaussianBlur.h"
+#include "GameActors/PostProcess.h"
 
 using namespace GNAFramework;
 
@@ -61,8 +60,7 @@ public:
     Texture2D *loading_tex;
     SpriteBatch *spriteBatch;
     
-    AnamorphicBloom *anBloom;
-    GaussianBlur    *gaBlur;
+    PostProcess *postProcces;
 
     TronRacing() {
         Content->RootDirectory = (char *) "Content/";
@@ -75,7 +73,7 @@ public:
         DebugManager::debugInfo("Loading GAME_CONF.xml.");
         DataManager::loadGameDescription("GAME_CONF.xml");
 
-
+        
         actual_level = 0;
         float ar = graphicDevice->getViewPort().aspectRatio();
         camera = Camera(Vector3(-555, 430, 320) * DataManager::unit_size, Vector3(0, 0, 500.f) * DataManager::unit_size, Vector3(0, 0, 1), Frustum(45.0f, ar, 1.f, 10000.0f));
@@ -85,13 +83,13 @@ public:
         dirCamera->moveSpeed = 500.f;
         dirCamera->PlanesChangeSpeed = 500.f;
         
-
+        
         DebugManager::debugInfo("Instantiating Scenario");
         scenario = new Scenario(this, &camera);
-
+        
         DebugManager::debugInfo("Instantiating Player");
         player = new LightCycle(this, &camera);
-
+        
         enemies_length = 0;
         enemies = new Enemy*[MAX_ENEMIES];
         for (int i = 0; i < MAX_ENEMIES; i++) enemies[i] = NULL;
@@ -102,16 +100,11 @@ public:
 
         DebugManager::debugInfo("Initialazing GNAGame.");
         Game::Initialize();
-
         spriteBatch = new SpriteBatch(this->graphicDevice);
         loading_tex = Content->Load<Texture2D > ("Loading.bmp");
         
-        
-        int width  = graphicDevice->getViewPort().width, 
-            height = graphicDevice->getViewPort().height;
-        
-        anBloom = new AnamorphicBloom(this, "Shaders", width/2, height/2, 30);
-        gaBlur  = new GaussianBlur(this, "Shaders", anBloom->getCaputedImage(), 10);
+        DebugManager::debugInfo("Initialazing PostProcess Module.");
+        postProcces = new PostProcess(this);
         
         DebugManager::debugInfo("Tron Race Initialized.");
     }
@@ -364,17 +357,16 @@ public:
     }
 
     void miniDraw(GameTime gameTime) {
-
+        // <editor-fold defaultstate="collapsed" desc="Draw Color:">
+        
+        
         graphicDevice->DeepBufferEnabled(true);
         graphicDevice->DeepBufferWritteEnabled(true);
         
         graphicDevice->setRasterizerState(RasterizerState::CullCounterClockwise);
         graphicDevice->setBlendState(BlendState::Opaque);
         
-        
-        // <editor-fold defaultstate="collapsed" desc="Draw Color:">
-        //graphicDevice->SetRenderTarget(baseRender);
-        //graphicDevice->Clear(Color::Grey);
+        postProcces->Begin();
         
         scenario->Draw(gameTime, DrawColor);
 
@@ -395,40 +387,13 @@ public:
             enemies[i]->DrawTrail(DrawColor);
         }
         
+        postProcces->End();
         // </editor-fold>
         
         graphicDevice->DeepBufferWritteEnabled(true);
         graphicDevice->setBlendState(BlendState::Opaque);
         graphicDevice->setRasterizerState(RasterizerState::CullCounterClockwise);
         
-        
-        
-        anBloom->Begin();
-        
-        scenario->Draw(gameTime, DrawBright);
-        
-        /*
-        player->Draw(gameTime, DrawColor);
-
-        for (int i = 0; i < enemies_length; i++) {
-            enemies[i]->Draw(gameTime, DrawColor);
-        }
-        
-         
-        graphicDevice->DeepBufferWritteEnabled(false);
-        graphicDevice->setBlendState(BlendState(BlendState::One, BlendState::One, BlendState::Add));
-        graphicDevice->setRasterizerState(RasterizerState::CullNone);
-        
-        player->DrawTrail(DrawBright);
-
-        for (int i = 0; i < enemies_length; i++) {
-            enemies[i]->DrawTrail(DrawBright);
-        }
-        */
-        
-        
-        anBloom->End();
-        gaBlur->Apply();
         
     }
 
@@ -475,6 +440,10 @@ public:
                 dirCamera->camera = camera;
             } else if (im.KeyPressed(Keyboard::F6)) {
                 cameras = 6;
+            }
+            
+            if (im.KeyGetPressed(Keyboard::B)) {
+                postProcces->active = !postProcces->active;
             }
         }
     }

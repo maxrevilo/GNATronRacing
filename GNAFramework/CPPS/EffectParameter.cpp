@@ -11,24 +11,23 @@ Texture2D *EffectParameter::getTexture() {
 }
 
 EffectParameter::EffectParameter(Effect *effect, const char *name) {
-    this->name = new char[strlen(name) + 1];
+    
+    int nLenght = strlen(name);
+    
+    if(nLenght > 31) 
+        throw ArgumentOutOfRangeException("The EffectParameter name is too large.");
+    
     strcpy(this->name, name);
-
-
+    this->name[nLenght] = '\0';
+    
     this->effect = effect;
     location = glGetUniformLocationARB(effect->program, name);
     texturePosition = -1;
 }
 
-EffectParameter::EffectParameter(const EffectParameter& orig) {
-    (*this) = orig;
-    name = new char[strlen(orig.name) + 1];
-    strcpy(name, orig.name);
-}
-
 EffectParameter::EffectParameter() {
     location = INT_MAX;
-    name = NULL;
+    name[0] = '\0';
     texturePosition = -1;
 }
 
@@ -58,7 +57,6 @@ void EffectParameter::deactivateEffect() {
 
 
 EffectParameter::~EffectParameter() {
-    delete name;
 }
 
 
